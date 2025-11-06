@@ -4,7 +4,7 @@ export type SiteConfig = typeof siteConfig;
 export const siteConfig = {
     name: 'PUBG Mobile',
     seo: {
-        title: '官网 | 下载、更新、攻略 - 官方正版入口',
+        title: '地铁逃生手游官网 | 下载、更新、攻略 - 官方正版入口',
         description: '欢迎访问PUBG Mobile中心，提供最新游戏下载、更新日志、游戏攻略和玩家社区，支持安卓与iOS系统，一站式掌握刺激战场动态。',
         keywords: ['PUBG Mobile', 'PUBG Mobile 官网', 'PUBG Mobile 下载', '吃鸡手游', '刺激战场', '地铁逃生', '和平精英国际服', 'PUBG Mobile 更新', 'PUBG Mobile 攻略', 'pubgm apk', 'pubgm 安卓下载', 'PUBG Mobile iOS下载'],
         ogImage: 'https://cdn.apks.cc/blinko/1753974441995-1753974441505-share.jpg',
@@ -34,7 +34,7 @@ export const siteConfig = {
     },
     hero: {
         backgroundImage: 'https://cdn.apks.cc/blinko/1753975129551-1753975127906-downloadbj.png',
-        title: '史诗级大逃杀巨作',
+        title: '史诗级大逃杀巨作-已更新4.1版本',
         description: '超多活动，等你游玩, 在PUBG MOBILE登上颠峰，尽情开火。 PUBG MOBILE是原创的大逃杀手机游戏，也是手机射击游戏巅峰之作。',
     },
     downloads: {
@@ -55,15 +55,15 @@ export const siteConfig = {
                 title: '选择下载渠道',
                 description: '请选择您偏好的下载方式。',
                 panUrl: 'https://www.123pan.com/s/4H3LVv-gUpI',
-                officialUrl: 'https://f.gbcass.com/PUBGMOBILE_Global_4.0.0_uawebsite_livik01_0BF0D6A773.apk',
+                officialUrl: 'https://f.gbcass.com/PUBGMOBILE_Global_4.1.0_uawebsite_livik01_84140693A.apk',
             }
         },
     },
     video: {
         id: 'video',
-        title: '地铁逃生4.0版本！',
+        title: '地铁逃生4.1版本！',
         url: 'https://cdn.apks.cc/blinko/SaveTwitter.Net_PvBCAHz2Hgyl45Oq_(1080p).mp4',
-        playerTitle: 'pubgm4.0版本',
+        playerTitle: 'pubgm4.1版本',
         navLabel: '官方频道',
         enabled: true,
     },
