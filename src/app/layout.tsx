@@ -4,7 +4,6 @@ import { Suspense } from 'react';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import { getSiteConfig } from '@/config/site';
-import Script from 'next/script';
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -39,7 +38,7 @@ export async function generateMetadata({ searchParams }: LayoutProps, parent: Re
   };
 }
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -48,4 +47,11 @@ export default async function RootLayout({
     <html lang="zh-Hans" className="dark">
       <head />
       <body className="font-body antialiased bg-background text-foreground">
-        <Suspense
+        <Suspense>
+          <main>{children}</main>
+        </Suspense>
+        <Toaster />
+      </body>
+    </html>
+  );
+}
