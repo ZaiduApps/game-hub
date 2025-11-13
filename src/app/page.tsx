@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { GameDownloadButtons } from '@/components/GameDownloadButtons';
 import { ArrowRight } from 'lucide-react';
 import { CommunitySquare } from '@/components/CommunitySquare';
-import { getSiteConfig } from '@/config/site';
+import { getSiteConfig, SiteConfig } from '@/config/site';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 
@@ -17,7 +17,7 @@ interface HomeProps {
 
 
 export default async function Home({ searchParams }: HomeProps) {
-  const pkg = searchParams?.pkg as string | undefined;
+  const pkg = typeof searchParams?.pkg === 'string' ? searchParams.pkg : undefined;
   const siteConfig = await getSiteConfig(pkg);
 
   if (!siteConfig) {

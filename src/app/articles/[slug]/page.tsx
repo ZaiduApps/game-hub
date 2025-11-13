@@ -1,4 +1,3 @@
-
 import { getArticleBySlug, getSiteConfig } from '@/config/site';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';

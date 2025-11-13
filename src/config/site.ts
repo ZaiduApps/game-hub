@@ -943,9 +943,9 @@ export const defaultSiteConfig: SiteConfig = {
 
 ◇ Mini14：軀幹部位傷害係數13-1.1（恢復經典模式數值）
 
-◇ SLR：軀幹部位傷害系數1.3-1（恢復經典模式數值）
+◇ SLR：軀幹部位傷害係數1.3-1（恢復經典模式數值）
 
-◇ QBU：軀幹部位傷害系數1.3-1（恢復經典模式數值）
+◇ QBU：軀幹部位傷害係數1.3-1（恢復經典模式數值）
 
 **【家園更新】**
 
@@ -957,7 +957,7 @@ export const defaultSiteConfig: SiteConfig = {
 
 ☆ 家園圖紙分期付款功能：購買家園圖紙時支援分期付款，具體規則如下：
 
-◇ 付出一定比例首期款項後，每月償還剩餘金額。
+◇ 付出一定比例首期款項後，每月償還剩餘金额。
 
 ◇ 透過活躍可免除全部利息，同一時間僅支援1個物品分期。
 
@@ -997,7 +997,7 @@ export const defaultSiteConfig: SiteConfig = {
 
 ◇ 停車券可在商店兌換載具代幣、抽獎減免券、家園限定雕像等豐富道具獎勵。
 
-◇ 每週結算當週停車券收益排行榜，頭一百名玩家可透過電郵領取額外道具獎勵。
+◇ 每週結算當週停車券收益排行榜，頭一百名玩家可透過電郵領取额外道具獎勵。
 
 ◇ 停車場玩法每個賽季結算，已獲得的停車場資源、停車場等級及商店獲取的道具獎勵將會保留，停車券將在賽季末清空並分解為家園幣。
 
@@ -1238,8 +1238,9 @@ PUBG MOBILE运营团队
     ]
 };
 
-export const getSiteConfig = async (pkg?: string): Promise<SiteConfig> => {
+export const getSiteConfig = async (pkg?: string | undefined): Promise<SiteConfig> => {
     if (!pkg) {
+        console.log("No pkg provided, using default site config.");
         return defaultSiteConfig;
     }
 
@@ -1248,9 +1249,12 @@ export const getSiteConfig = async (pkg?: string): Promise<SiteConfig> => {
     try {
         console.log(`Fetching site config from: ${apiUrl}`);
         const response = await fetch(apiUrl, { cache: 'no-store' });
+        
         if (!response.ok) {
-            throw new Error(`API request failed with status ${response.status}`);
+            console.error(`API request failed with status ${response.status}, falling back to default.`);
+            return defaultSiteConfig;
         }
+
         const data = await response.json();
         const parsedData = SiteConfigSchema.safeParse(data);
         
@@ -1258,7 +1262,7 @@ export const getSiteConfig = async (pkg?: string): Promise<SiteConfig> => {
             console.log("Successfully fetched and parsed dynamic config.");
             return parsedData.data;
         } else {
-            console.error("Failed to parse dynamic config, falling back to default.", parsedData.error);
+            console.error("Failed to parse dynamic config, falling back to default.", parsedData.error.toString());
             return defaultSiteConfig;
         }
     } catch (error) {
