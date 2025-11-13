@@ -29,6 +29,24 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'cdn.z.wiki',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'hv.z.wiki',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'cdn-pubgm-cms.vasdgame.com',
+        port: '',
+        pathname: '/**',
+      }
     ],
   },
 };
