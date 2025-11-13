@@ -1,3 +1,4 @@
+
 import { z } from 'zod';
 
 const ArticleSchema = z.object({
@@ -29,6 +30,10 @@ const SiteConfigSchema = z.object({
         ogImage: z.string().url(),
     }),
     analytics: z.object({
+        baiduVerification: z.string().optional(),
+        googleVerification: z.string().optional(),
+        sogouVerification: z.string().optional(),
+        qihuVerification: z.string().optional(),
         customHeadHtml: z.string().optional(),
     }).optional(),
     header: z.object({
@@ -101,7 +106,11 @@ export const defaultSiteConfig: SiteConfig = {
         ogImage: 'https://cdn.apks.cc/blinko/1753974441995-1753974441505-share.jpg',
     },
     analytics: {
-        customHeadHtml: `<meta name="baidu-site-verification" content="codeva-9XyV2k6cAS" /><meta name="google-site-verification" content="wheyJrkeJteNmtsowo1dyWiAtd18QqJR0VGilx25600" /><meta name="360-site-verification" content="999219046b1b9e0ef3a7f7c0f481fe20" /><meta name="sogou_site_verification" content="2rU7VTaXRK" /><script>
+        baiduVerification: 'codeva-9XyV2k6cAS',
+        googleVerification: 'wheyJrkeJteNmtsowo1dyWiAtd18QqJR0VGilx25600',
+        qihuVerification: '999219046b1b9e0ef3a7f7c0f481fe20',
+        sogouVerification: '2rU7VTaXRK',
+        customHeadHtml: `<script>
             var _hmt = _hmt || [];
             (function() {
               var hm = document.createElement("script");
@@ -1238,7 +1247,7 @@ PUBG MOBILE运营团队
     ]
 };
 
-export const getSiteConfig = async (pkg?: string | undefined): Promise<SiteConfig> => {
+export const getSiteConfig = async (pkg?: string): Promise<SiteConfig> => {
     if (!pkg) {
         console.log("No pkg provided, using default site config.");
         return defaultSiteConfig;

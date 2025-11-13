@@ -13,8 +13,8 @@ type LayoutProps = {
 };
 
 export async function generateMetadata({ searchParams }: LayoutProps, parent: ResolvingMetadata): Promise<Metadata> {
-  const pkg = searchParams?.pkg;
-  const siteConfig = await getSiteConfig(pkg as string | undefined);
+  const pkg = searchParams?.pkg as string | undefined;
+  const siteConfig = await getSiteConfig(pkg);
   
   const previousImages = (await parent).openGraph?.images || [];
 
@@ -30,29 +30,22 @@ export async function generateMetadata({ searchParams }: LayoutProps, parent: Re
       description: siteConfig.seo.description,
       images: [siteConfig.seo.ogImage, ...previousImages],
     },
+    other: {
+      ...(siteConfig.analytics?.baiduVerification && { 'baidu-site-verification': siteConfig.analytics.baiduVerification }),
+      ...(siteConfig.analytics?.googleVerification && { 'google-site-verification': siteConfig.analytics.googleVerification }),
+      ...(siteConfig.analytics?.sogouVerification && { 'sogou_site_verification': siteConfig.analytics.sogouVerification }),
+      ...(siteConfig.analytics?.qihuVerification && { '360-site-verification': siteConfig.analytics.qihuVerification }),
+    }
   };
 }
 
 export default async function RootLayout({
   children,
-  searchParams,
-}: LayoutProps) {
-  const pkg = searchParams?.pkg;
-  const siteConfig = await getSiteConfig(pkg as string | undefined);
-
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="zh-Hans" className="dark">
-      <head>
-        {siteConfig.analytics?.customHeadHtml && (
-          <Script id="analytics-script" strategy="afterInteractive" dangerouslySetInnerHTML={{ __html: siteConfig.analytics.customHeadHtml }} />
-        )}
-      </head>
+      <head />
       <body className="font-body antialiased bg-background text-foreground">
-        <Suspense>
-          {children}
-        </Suspense>
-        <Toaster />
-      </body>
-    </html>
-  );
-}
+        <Suspense
