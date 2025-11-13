@@ -7,8 +7,8 @@ import { Button } from '@/components/ui/button';
 import { Gamepad2, Menu, MessageSquare, Newspaper, Rss, Video } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
-import { siteConfig } from '@/config/site';
 import { ApkDownloadDialog } from '../ApkDownloadDialog';
+import { SiteConfig } from '@/config/site';
 
 const navIcons: { [key: string]: React.ElementType } = {
   home: Gamepad2,
@@ -18,7 +18,11 @@ const navIcons: { [key: string]: React.ElementType } = {
   video: Video,
 };
 
-export function Header() {
+interface HeaderProps {
+  siteConfig: SiteConfig;
+}
+
+export function Header({ siteConfig }: HeaderProps) {
   const [activeSection, setActiveSection] = useState('home');
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [isApkDialogOpen, setIsApkDialogOpen] = useState(false);
@@ -43,19 +47,19 @@ export function Header() {
 
         let currentSection = 'home';
 
-        sectionsToObserve.forEach(section => {
-            if (section) {
-                const sectionTop = section.offsetTop;
-                if (window.scrollY >= sectionTop - 100) { // 100px offset
-                    currentSection = section.id;
-                }
-            }
-        });
+        for (const section of sectionsToObserve) {
+          if (section) {
+              const sectionTop = section.offsetTop;
+              if (window.scrollY >= sectionTop - 100) { // 100px offset
+                  currentSection = section.id;
+              }
+          }
+        }
         
         setActiveSection(currentSection);
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll(); // Set initial active section
 
     return () => {
@@ -109,7 +113,7 @@ export function Header() {
                       <SheetHeader>
                         <SheetTitle className="sr-only">主菜单</SheetTitle>
                         <Link href="/" className="flex items-center space-x-2">
-                          <PubgLogo />
+                          <PubgLogo siteConfig={siteConfig} />
                         </Link>
                       </SheetHeader>
                       <nav className="flex flex-col space-y-4 mt-6">
@@ -135,7 +139,7 @@ export function Header() {
                   </Sheet>
                 </div>
               <Link href="/" className="flex items-center space-x-2">
-                  <PubgLogo />
+                  <PubgLogo siteConfig={siteConfig} />
               </Link>
               <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
                   {navLinks.map(({ href, label, sectionId }) => (
@@ -163,9 +167,7 @@ export function Header() {
           </div>
         </div>
       </header>
-      <ApkDownloadDialog open={isApkDialogOpen} onOpenChange={setIsApkDialogOpen} />
+      {siteConfig.downloads.apk && <ApkDownloadDialog open={isApkDialogOpen} onOpenChange={setIsApkDialogOpen} siteConfig={siteConfig} />}
     </>
   );
 }
-
-    

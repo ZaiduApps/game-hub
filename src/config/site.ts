@@ -1,7 +1,98 @@
+import { z } from 'zod';
 
-export type SiteConfig = typeof siteConfig;
+const ArticleSchema = z.object({
+    slug: z.string(),
+    title: z.string(),
+    summary: z.string(),
+    content: z.string(),
+    author: z.string().optional(),
+    date: z.string(),
+    imageUrl: z.string(),
+    imageHint: z.string(),
+    version: z.string().optional(),
+});
 
-export const siteConfig = {
+const SectionSchema = z.object({
+    id: z.string(),
+    title: z.string(),
+    navLabel: z.string(),
+    enabled: z.boolean().optional(),
+    items: z.array(ArticleSchema),
+});
+
+const SiteConfigSchema = z.object({
+    name: z.string(),
+    seo: z.object({
+        title: z.string(),
+        description: z.string(),
+        keywords: z.array(z.string()),
+        ogImage: z.string().url(),
+    }),
+    analytics: z.object({
+        customHeadHtml: z.string().optional(),
+    }).optional(),
+    header: z.object({
+        logo: z.object({
+            url: z.string().url(),
+            alt: z.string(),
+        }),
+    }),
+    hero: z.object({
+        backgroundImage: z.string().url(),
+        title: z.string(),
+        description: z.string(),
+    }),
+    downloads: z.object({
+        googlePlay: z.object({
+            url: z.string().url().or(z.literal("")),
+            backgroundImage: z.string().url(),
+            srText: z.string(),
+        }).nullable(),
+        appStore: z.object({
+            url: z.string().url().or(z.literal("")),
+            backgroundImage: z.string().url(),
+            srText: z.string(),
+        }).nullable(),
+        apk: z.object({
+            backgroundImage: z.string().url(),
+            line1: z.string(),
+            line2: z.string(),
+            dialog: z.object({
+                title: z.string(),
+                description: z.string(),
+                panUrl: z.string().url().or(z.literal("")),
+                officialUrl: z.string().url().or(z.literal("")),
+            }),
+        }).nullable(),
+    }),
+    video: z.object({
+        id: z.string(),
+        title: z.string(),
+        url: z.string().url().nullable(),
+        playerTitle: z.string(),
+        navLabel: z.string(),
+        enabled: z.boolean(),
+    }),
+    footer: z.object({
+        description: z.string(),
+        copyright: z.string(),
+        feedback: z.object({
+            email: z.string().email(),
+            buttonText: z.string(),
+            dialogTitle: z.string(),
+            dialogDescription: z.string(),
+        }),
+    }),
+    sections: z.array(SectionSchema),
+});
+
+
+export type SiteConfig = z.infer<typeof SiteConfigSchema>;
+export type Article = z.infer<typeof ArticleSchema>;
+export type Section = z.infer<typeof SectionSchema>;
+export type Update = Article;
+
+export const defaultSiteConfig: SiteConfig = {
     name: 'PUBG Mobile',
     seo: {
         title: '地铁逃生手游官网 | 下载、更新、攻略 - 官方正版入口',
@@ -10,12 +101,7 @@ export const siteConfig = {
         ogImage: 'https://cdn.apks.cc/blinko/1753974441995-1753974441505-share.jpg',
     },
     analytics: {
-        customHeadHtml: `
-            <meta name="baidu-site-verification" content="codeva-9XyV2k6cAS" />
-            <meta name="google-site-verification" content="wheyJrkeJteNmtsowo1dyWiAtd18QqJR0VGilx25600" />
-            <meta name="360-site-verification" content="999219046b1b9e0ef3a7f7c0f481fe20" />
-            <meta name="sogou_site_verification" content="2rU7VTaXRK" />
-            <script>
+        customHeadHtml: `<meta name="baidu-site-verification" content="codeva-9XyV2k6cAS" /><meta name="google-site-verification" content="wheyJrkeJteNmtsowo1dyWiAtd18QqJR0VGilx25600" /><meta name="360-site-verification" content="999219046b1b9e0ef3a7f7c0f481fe20" /><meta name="sogou_site_verification" content="2rU7VTaXRK" /><script>
             var _hmt = _hmt || [];
             (function() {
               var hm = document.createElement("script");
@@ -23,8 +109,7 @@ export const siteConfig = {
               var s = document.getElementsByTagName("script")[0]; 
               s.parentNode.insertBefore(hm, s);
             })();
-            </script>
-        `,
+            </script>`,
     },
     header: {
         logo: {
@@ -44,7 +129,8 @@ export const siteConfig = {
             srText: '在 Google Play 下载',
         },
         appStore: {
-            url: 'https://apps.apple.com/hk/app/pubg-mobile/id1330123889',  backgroundImage: 'https://cdn.apks.cc/blinko/1753972022261-1753972021905-app_store.png',
+            url: 'https://apps.apple.com/hk/app/pubg-mobile/id1330123889',
+            backgroundImage: 'https://cdn.apks.cc/blinko/1753972022261-1753972021905-app_store.png',
             srText: '在 App Store 下载',
         },
         apk: {
@@ -113,7 +199,7 @@ export const siteConfig = {
                     date: '2025年11月6日',
                     imageUrl: 'https://cdn.apks.cc/blinko/6ba622a8ee270b96046b33b4da75ef56581766333.jpg@1052w_!web-dynamic.avif',
                     imageHint: 'apk',
-                  },
+                },
                 {
                     slug: 'pubgm-4.1-apk',
                     title: 'PUBG MOBILE 全新「极地动物城」版本已于11月6日正式更新！',
@@ -128,7 +214,7 @@ export const siteConfig = {
                     date: '2025年11月6日',
                     imageUrl: 'https://cdn.apks.cc/blinko/4.11106.jpg',
                     imageHint: 'apk',
-                  },
+                },
                 {
                     slug: 'pubgm-4.0-apk',
                     title: '4.0版本重磅更新: 今年最“疯”的版本',
@@ -143,7 +229,7 @@ export const siteConfig = {
                     date: '2025年9月6日',
                     imageUrl: 'https://cdn.apks.cc/blinko/Gz4TflcXUAAJ9iD.jpg',
                     imageHint: 'apk',
-                  },
+                },
                 {
                     slug: 'pubgm-4.0-news-0904',
                     title: '《PUBG Mobile》4.0版本已推出',
@@ -153,7 +239,7 @@ export const siteConfig = {
                     date: '2025年8月26日',
                     imageUrl: 'https://cdn.apks.cc/blinko/1500x500.jpg',
                     imageHint: 'phone sim card',
-                  },
+                },
                 {
                     slug: 'pubgm-4.0-news-0826',
                     title: '《PUBG Mobile》4.0版本即将来袭！',
@@ -163,7 +249,7 @@ export const siteConfig = {
                     date: '2025年8月26日',
                     imageUrl: 'https://cdn.apks.cc/blinko/GzHoaW7XkAARM8F.jpg',
                     imageHint: 'phone sim card',
-                  },
+                },
                 {
                     slug: 'pubgm-login-solution-sim-card',
                     title: '《PUBG Mobile》登录失败/卡加载？新用户必读的“拔卡”终极解决方案',
@@ -173,8 +259,8 @@ export const siteConfig = {
                     date: '2025年8月20日',
                     imageUrl: 'https://cdn.apks.cc/blinko/kv3.jpg',
                     imageHint: 'phone sim card',
-                  },
-                  {
+                },
+                {
                     slug: 'pubgm-metro-royale-accelerator-recommendation',
                     title: '《PUBG Mobile》地铁逃生加速器哪个好？告别高延迟、掉线，稳定“摸金”必备利器',
                     summary: '玩《PUBG Mobile》地铁逃生模式，最怕的就是关键时刻网络延迟、掉线，导致“辛辛苦苦几十年，一朝回到解放前”。本文为你深度分析并推荐几款稳定高效的游戏加速器，助你获得流畅的网络体验，成为地铁里的常胜将军。',
@@ -183,8 +269,8 @@ export const siteConfig = {
                     date: '2025年8月20日',
                     imageUrl: 'https://cdn.apks.cc/blinko/part4.jpg',
                     imageHint: 'network connection speed',
-                  },
-                  {
+                },
+                {
                     slug: 'apple-app-store-switch-region-guide',
                     title: '如何在iPhone/iPad上切换App Store到港澳台区，下载《PUBG Mobile》等海外游戏？',
                     summary: '想玩《PUBG Mobile》国际服，却发现在国区App Store里搜不到？别担心，这只是因为游戏没有在国区上架。本文将提供详细的图文教程，教你如何轻松将你的Apple ID切换到香港、澳门或台湾地区，顺利下载游戏。',
@@ -193,7 +279,7 @@ export const siteConfig = {
                     date: '2025年8月20日',
                     imageUrl: 'https://cdn.apks.cc/blinko/part6.jpg',
                     imageHint: 'mobile app store',
-                  },
+                },
             ]
         },
         {
@@ -855,7 +941,7 @@ export const siteConfig = {
 
 ◇ SKS：軀幹部位傷害係數13→1.05（恢復經典模式數值）
 
-◇ Mini14：軀幹部位傷害系數13-1.1（恢復經典模式數值）
+◇ Mini14：軀幹部位傷害係數13-1.1（恢復經典模式數值）
 
 ◇ SLR：軀幹部位傷害系數1.3-1（恢復經典模式數值）
 
@@ -915,29 +1001,29 @@ export const siteConfig = {
 
 ◇ 停車場玩法每個賽季結算，已獲得的停車場資源、停車場等級及商店獲取的道具獎勵將會保留，停車券將在賽季末清空並分解為家園幣。
 
-**家園建造大賽**
+**家园建造大赛**
 
-**☆ 活動主題：發揮無限創意，營造夢想家園！**
+**☆ 活动主题：发挥无限创意，营造梦想家园！**
 
 ◇ 募集期：6/9/2025 02:00:00-23/9/2025 08:59:59（UTC+0)
 
-◇ 評選期：23/9/2025 09:00:00-23/10/2025 08:59:59（UTC+0)
+◇ 评选期：23/9/2025 09:00:00-23/10/2025 08:59:59（UTC+0)
 
-**☆ 參賽條件與報名規則**
+**☆ 参赛条件与报名规则**
 
-◇ 報名基礎條件：如要報名參加家園建造大賽，家園繁榮度須≥200
+◇ 报名基础条件：如要报名参加家园建造大赛，家园繁荣度须≥200
 
-◇ 補報機制：若錯過募集期，仍可在評選期內報名，報名後將進入下一輪配對池。
+◇ 补报机制：若错过募集期，仍可在评选期内报名，报名后将进入下一轮配对池。
 
-◇ 評選根據：成功報名後，系統將顯示目前家園的模型效果，作為之後評選的主要根據。
+◇ 评选根据：成功报名后，系统将显示目前家园的模型效果，作为之后评选的主要根据。
 
-**☆ 評選機制與對戰流程**
+**☆ 评选机制与对战流程**
 
-◇ 對決模式：在評選期內，玩家將每3天隨機配對一名繁榮度相若的對手，進行共10輪對決。
+◇ 对决模式：在评选期内，玩家将每3天随机配对一名繁荣度相若的对手，进行共10轮对决。
 
-◇ 勝負判定：對決時，系統會比較雙方獲得的「家園·投票券」數量，票數較高的一方獲勝。
+◇ 胜负判定：对决时，系统会比较双方获得的「家园·投票券」数量，票数较高的一方获胜。
 
-◇ 積分奪取：勝利方可奪取失敗方的對決積分，積分高低直接影響獎勵豐富程度。
+◇ 积分夺取：胜利方可夺取失败方的对决积分，积分高低直接影响奖励丰富程度。
 
 ◇ 家园对决等级：参与对决可获得家园对决积分，用于提升玩家的家园对决等级，等级越高，最终奖励越丰富。
 
@@ -1152,36 +1238,44 @@ PUBG MOBILE运营团队
     ]
 };
 
-export const getArticleBySlug = (slug: string) => {
-    for (const section of siteConfig.sections) {
-      if (!section.items) continue;
-      const article = section.items.find((item: any) => item.slug === slug);
-      if (article) {
-        return article;
-      }
+export const getSiteConfig = async (pkg?: string): Promise<SiteConfig> => {
+    if (!pkg) {
+        return defaultSiteConfig;
+    }
+
+    const apiUrl = `https://api.us.apks.cc/game/site-config?pkg=${pkg}`;
+    
+    try {
+        console.log(`Fetching site config from: ${apiUrl}`);
+        const response = await fetch(apiUrl, { cache: 'no-store' });
+        if (!response.ok) {
+            throw new Error(`API request failed with status ${response.status}`);
+        }
+        const data = await response.json();
+        const parsedData = SiteConfigSchema.safeParse(data);
+        
+        if (parsedData.success) {
+            console.log("Successfully fetched and parsed dynamic config.");
+            return parsedData.data;
+        } else {
+            console.error("Failed to parse dynamic config, falling back to default.", parsedData.error);
+            return defaultSiteConfig;
+        }
+    } catch (error) {
+        console.error("Error fetching or parsing site config, falling back to default:", error);
+        return defaultSiteConfig;
+    }
+};
+
+
+export const getArticleBySlug = async (slug: string, pkg?: string) => {
+    const config = await getSiteConfig(pkg);
+    for (const section of config.sections) {
+        if (!section.items) continue;
+        const article = section.items.find((item: any) => item.slug === slug);
+        if (article) {
+            return article;
+        }
     }
     return null;
-  };
-  
-export interface Article {
-    slug: string;
-    title: string;
-    summary: string;
-    content: string;
-    author?: string;
-    date: string;
-    imageUrl: string;
-    imageHint: string;
-    version?: string;
-}
-
-export interface Section {
-    id: string;
-    title: string;
-    navLabel: string;
-    enabled?: boolean;
-    items: Article[];
-}
-  
-export interface Update extends Article {}
-  
+};

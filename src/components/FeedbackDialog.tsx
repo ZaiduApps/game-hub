@@ -26,13 +26,17 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { siteConfig } from '@/config/site';
+import { SiteConfig } from '@/config/site';
 import { submitFeedback } from '@/app/actions';
 import { Loader2 } from 'lucide-react';
 import { FeedbackInput, FeedbackInputSchema } from '@/lib/types';
 
 
-export function FeedbackDialog() {
+interface FeedbackDialogProps {
+  siteConfig: SiteConfig;
+}
+
+export function FeedbackDialog({ siteConfig }: FeedbackDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();

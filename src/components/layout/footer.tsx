@@ -1,16 +1,22 @@
+
+'use client';
 import Link from 'next/link';
 import { PubgLogo } from '@/components/icons/PubgLogo';
-import { siteConfig } from '@/config/site';
+import { SiteConfig } from '@/config/site';
 import { FeedbackDialog } from '@/components/FeedbackDialog';
 
-export function Footer() {
+interface FooterProps {
+  siteConfig: SiteConfig;
+}
+
+export function Footer({ siteConfig }: FooterProps) {
   return (
     <footer className="border-t border-border/40 py-8">
       <div className="px-4 md:px-6">
         <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
             <div className="flex flex-col items-center gap-4 md:items-start">
             <Link href="/">
-                <PubgLogo />
+                <PubgLogo siteConfig={siteConfig} />
             </Link>
             <p className="text-sm text-muted-foreground text-center md:text-left max-w-xs">
                 {siteConfig.footer.description}
@@ -25,7 +31,7 @@ export function Footer() {
                 <a href={`mailto:${siteConfig.footer.feedback.email}`} className="hover:text-primary transition-colors">
                     {siteConfig.footer.feedback.email}
                 </a>
-                <FeedbackDialog />
+                <FeedbackDialog siteConfig={siteConfig} />
             </div>
         </div>
       </div>

@@ -1,7 +1,11 @@
 import Image from "next/image";
-import { siteConfig } from "@/config/site";
+import { SiteConfig } from "@/config/site";
 
-export function PubgLogo() {
+interface PubgLogoProps {
+  siteConfig: SiteConfig;
+}
+
+export function PubgLogo({ siteConfig }: PubgLogoProps) {
   return (
     <div className="flex items-center gap-3">
       <Image 

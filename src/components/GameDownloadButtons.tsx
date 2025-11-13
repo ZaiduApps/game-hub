@@ -3,16 +3,20 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { siteConfig } from '@/config/site';
 import { ApkDownloadDialog } from './ApkDownloadDialog';
+import { SiteConfig } from '@/config/site';
 
-export function GameDownloadButtons() {
+interface GameDownloadButtonsProps {
+    siteConfig: SiteConfig;
+}
+
+export function GameDownloadButtons({ siteConfig }: GameDownloadButtonsProps) {
     const [isApkDialogOpen, setIsApkDialogOpen] = useState(false);
     const { downloads } = siteConfig;
 
     return (
         <div className="flex flex-col sm:flex-row gap-4">
-            {downloads.googlePlay && (
+            {downloads.googlePlay && downloads.googlePlay.url && (
                 <Button asChild size="lg" className="animated-border-btn !p-0 w-[180px] h-[52px] sm:w-[200px] sm:h-[58px] bg-cover bg-center hover:scale-105 transition-transform duration-300 border border-white/50" style={{backgroundImage: `url('${downloads.googlePlay.backgroundImage}')`}}>
                     <Link href={downloads.googlePlay.url} target="_blank">
                         <span className="sr-only">{downloads.googlePlay.srText}</span>
@@ -20,7 +24,7 @@ export function GameDownloadButtons() {
                 </Button>
             )}
 
-            {downloads.appStore && (
+            {downloads.appStore && downloads.appStore.url && (
                 <Button asChild size="lg" className="animated-border-btn !p-0 w-[180px] h-[52px] sm:w-[200px] sm:h-[58px] bg-cover bg-center hover:scale-105 transition-transform duration-300 border border-white/50" style={{backgroundImage: `url('${downloads.appStore.backgroundImage}')`}}>
                     <Link href={downloads.appStore.url}>
                         <span className="sr-only">{downloads.appStore.srText}</span>
@@ -42,7 +46,7 @@ export function GameDownloadButtons() {
                 </Button>
             )}
 
-            {downloads.apk && <ApkDownloadDialog open={isApkDialogOpen} onOpenChange={setIsApkDialogOpen} />}
+            {downloads.apk && <ApkDownloadDialog open={isApkDialogOpen} onOpenChange={setIsApkDialogOpen} siteConfig={siteConfig} />}
         </div>
     );
 }
