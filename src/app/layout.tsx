@@ -4,6 +4,7 @@ import { Suspense } from 'react';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import { getSiteConfig } from '@/config/site';
+import Script from 'next/script';
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -17,7 +18,7 @@ export async function generateMetadata({ searchParams }: LayoutProps, parent: Re
   
   const previousImages = (await parent).openGraph?.images || [];
 
-  return {
+  const metadata: Metadata = {
     title: {
       default: `${siteConfig.name} - ${siteConfig.seo.title}`,
       template: `%s - ${siteConfig.name}`,
@@ -29,23 +30,57 @@ export async function generateMetadata({ searchParams }: LayoutProps, parent: Re
       description: siteConfig.seo.description,
       images: [siteConfig.seo.ogImage, ...previousImages],
     },
-    other: {
-      ...(siteConfig.analytics?.baiduVerification && { 'baidu-site-verification': siteConfig.analytics.baiduVerification }),
-      ...(siteConfig.analytics?.googleVerification && { 'google-site-verification': siteConfig.analytics.googleVerification }),
-      ...(siteConfig.analytics?.sogouVerification && { 'sogou_site_verification': siteConfig.analytics.sogouVerification }),
-      ...(siteConfig.analytics?.qihuVerification && { '360-site-verification': siteConfig.analytics.qihuVerification }),
-    }
+    other: {},
   };
+
+  if (siteConfig.analytics) {
+    if (siteConfig.analytics.baiduVerification && metadata.other) {
+        metadata.other['baidu-site-verification'] = siteConfig.analytics.baiduVerification;
+    }
+    if (siteConfig.analytics.googleVerification && metadata.other) {
+        metadata.other['google-site-verification'] = siteConfig.analytics.googleVerification;
+    }
+    if (siteConfig.analytics.sogouVerification && metadata.other) {
+        metadata.other['sogou_site_verification'] = siteConfig.analytics.sogouVerification;
+    }
+    if (siteConfig.analytics.qihuVerification && metadata.other) {
+        metadata.other['360-site-verification'] = siteConfig.analytics.qihuVerification;
+    }
+  }
+
+
+  return metadata;
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
+  searchParams,
 }: {
   children: React.ReactNode;
+  searchParams: { [key: string]: string | string[] | undefined };
 }) {
+  const pkg = searchParams?.pkg as string | undefined;
+  const siteConfig = await getSiteConfig(pkg);
+  
+  const extractScript = (html: string) => {
+    const scriptRegex = /<script>([\s\S]*?)<\/script>/;
+    const match = html.match(scriptRegex);
+    return match ? match[1] : '';
+  };
+  
+  const analyticsScript = siteConfig.analytics?.customHeadHtml
+    ? extractScript(siteConfig.analytics.customHeadHtml)
+    : '';
+
   return (
     <html lang="zh-Hans" className="dark">
-      <head />
+      <head>
+        {analyticsScript && (
+          <Script id="analytics-script" strategy="afterInteractive">
+            {analyticsScript}
+          </Script>
+        )}
+      </head>
       <body className="font-body antialiased bg-background text-foreground">
         <Suspense>
           <main>{children}</main>
