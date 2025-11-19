@@ -34,7 +34,8 @@ const SiteConfigSchema = z.object({
         googleVerification: z.string().optional(),
         sogouVerification: z.string().optional(),
         qihuVerification: z.string().optional(),
-        customHeadHtml: z.string().optional(),
+        baiduAnalyticsId: z.string().optional(),
+        customHeadHtml: z.string().optional(), // Keep for potential other uses, but we'll prioritize structured data
     }).optional(),
     header: z.object({
         logo: z.object({
@@ -110,15 +111,7 @@ export const defaultSiteConfig: SiteConfig = {
         googleVerification: 'wheyJrkeJteNmtsowo1dyWiAtd18QqJR0VGilx25600',
         qihuVerification: '999219046b1b9e0ef3a7f7c0f481fe20',
         sogouVerification: '2rU7VTaXRK',
-        customHeadHtml: `<script>
-            var _hmt = _hmt || [];
-            (function() {
-              var hm = document.createElement("script");
-              hm.src = "https://hm.baidu.com/hm.js?b2e255a5512aa46a4f692adf9c8bfe00";
-              var s = document.getElementsByTagName("script")[0]; 
-              s.parentNode.insertBefore(hm, s);
-            })();
-            </script>`,
+        baiduAnalyticsId: 'b2e255a5512aa46a4f692adf9c8bfe00',
     },
     header: {
         logo: {
@@ -1269,7 +1262,41 @@ export const getSiteConfig = async (pkg?: string): Promise<SiteConfig> => {
         
         if (parsedData.success) {
             console.log("Successfully fetched and parsed dynamic config.");
-            return parsedData.data;
+            // Deep merge the dynamic config with the default config
+            const mergedConfig = {
+                ...defaultSiteConfig,
+                ...parsedData.data,
+                seo: {
+                    ...defaultSiteConfig.seo,
+                    ...parsedData.data.seo
+                },
+                analytics: parsedData.data.analytics ? { // only merge if analytics exists in dynamic
+                    ...defaultSiteConfig.analytics,
+                    ...parsedData.data.analytics
+                } : defaultSiteConfig.analytics,
+                header: {
+                    ...defaultSiteConfig.header,
+                    ...parsedData.data.header
+                },
+                hero: {
+                    ...defaultSiteConfig.hero,
+                    ...parsedData.data.hero
+                },
+                downloads: {
+                    ...defaultSiteConfig.downloads,
+                    ...parsedData.data.downloads
+                },
+                video: {
+                    ...defaultSiteConfig.video,
+                    ...parsedData.data.video
+                },
+                footer: {
+                    ...defaultSiteConfig.footer,
+                    ...parsedData.data.footer
+                },
+                sections: parsedData.data.sections || defaultSiteConfig.sections,
+            };
+            return mergedConfig;
         } else {
             console.error("Failed to parse dynamic config, falling back to default.", parsedData.error.toString());
             return defaultSiteConfig;

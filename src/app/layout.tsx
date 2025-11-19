@@ -25,29 +25,37 @@ export async function generateMetadata({ searchParams }: LayoutProps, parent: Re
     },
     description: siteConfig.seo.description,
     keywords: siteConfig.seo.keywords,
+    verification: {},
     openGraph: {
       title: `${siteConfig.name} - ${siteConfig.seo.title}`,
       description: siteConfig.seo.description,
-      images: [siteConfig.seo.ogImage, ...previousImages],
+      images: siteConfig.seo.ogImage ? [siteConfig.seo.ogImage, ...previousImages] : previousImages,
     },
-    other: {},
   };
-
-  if (siteConfig.analytics) {
-    if (siteConfig.analytics.baiduVerification && metadata.other) {
-        metadata.other['baidu-site-verification'] = siteConfig.analytics.baiduVerification;
-    }
-    if (siteConfig.analytics.googleVerification && metadata.other) {
-        metadata.other['google-site-verification'] = siteConfig.analytics.googleVerification;
-    }
-    if (siteConfig.analytics.sogouVerification && metadata.other) {
-        metadata.other['sogou_site_verification'] = siteConfig.analytics.sogouVerification;
-    }
-    if (siteConfig.analytics.qihuVerification && metadata.other) {
-        metadata.other['360-site-verification'] = siteConfig.analytics.qihuVerification;
-    }
+  
+  // Dynamically add verification meta tags
+  if (siteConfig.analytics?.googleVerification) {
+    metadata.verification!.google = siteConfig.analytics.googleVerification;
   }
-
+  if (siteConfig.analytics?.baiduVerification) {
+    // There is no direct 'baidu' in metadata.verification, so we use 'other'
+     metadata.verification!.other = {
+      ...(metadata.verification!.other),
+      'baidu-site-verification': siteConfig.analytics.baiduVerification,
+    };
+  }
+  if (siteConfig.analytics?.sogouVerification) {
+    metadata.verification!.other = {
+      ...(metadata.verification!.other),
+      'sogou_site_verification': siteConfig.analytics.sogouVerification,
+    };
+  }
+  if (siteConfig.analytics?.qihuVerification) {
+    metadata.verification!.other = {
+      ...(metadata.verification!.other),
+      '360-site-verification': siteConfig.analytics.qihuVerification,
+    };
+  }
 
   return metadata;
 }
@@ -55,37 +63,31 @@ export async function generateMetadata({ searchParams }: LayoutProps, parent: Re
 export default async function RootLayout({
   children,
   searchParams,
-}: {
-  children: React.ReactNode;
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
+}: LayoutProps) {
   const pkg = searchParams?.pkg as string | undefined;
   const siteConfig = await getSiteConfig(pkg);
-  
-  const extractScript = (html: string) => {
-    const scriptRegex = /<script>([\s\S]*?)<\/script>/;
-    const match = html.match(scriptRegex);
-    return match ? match[1] : '';
-  };
-  
-  const analyticsScript = siteConfig.analytics?.customHeadHtml
-    ? extractScript(siteConfig.analytics.customHeadHtml)
-    : '';
 
   return (
     <html lang="zh-Hans" className="dark">
-      <head>
-        {analyticsScript && (
-          <Script id="analytics-script" strategy="afterInteractive">
-            {analyticsScript}
-          </Script>
-        )}
-      </head>
+      <head />
       <body className="font-body antialiased bg-background text-foreground">
         <Suspense>
           <main>{children}</main>
         </Suspense>
         <Toaster />
+        {siteConfig.analytics?.baiduAnalyticsId && (
+          <Script id="baidu-analytics" strategy="afterInteractive">
+            {`
+              var _hmt = _hmt || [];
+              (function() {
+                var hm = document.createElement("script");
+                hm.src = "https://hm.baidu.com/hm.js?${siteConfig.analytics.baiduAnalyticsId}";
+                var s = document.getElementsByTagName("script")[0]; 
+                s.parentNode.insertBefore(hm, s);
+              })();
+            `}
+          </Script>
+        )}
       </body>
     </html>
   );
