@@ -1,4 +1,5 @@
-import { getArticleBySlug } from '@/config/site';
+
+import { getArticleBySlug, getSiteConfig } from '@/config/site';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { MarkdownContent } from '@/components/MarkdownContent';
@@ -7,8 +8,6 @@ import { CommentSection } from '@/components/CommentSection';
 import type { Metadata, ResolvingMetadata } from 'next';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
-import { getSiteConfig } from '@/config/site';
-import { fallbackSiteConfig } from '@/lib/data';
 
 type Props = {
   params: { slug: string };
@@ -17,7 +16,7 @@ type Props = {
 
 export async function generateMetadata({ params, searchParams }: Props, parent: ResolvingMetadata): Promise<Metadata> {
   const pkg = typeof searchParams?.pkg === 'string' ? searchParams.pkg : undefined;
-  const siteConfig = await getSiteConfig(pkg) ?? fallbackSiteConfig;
+  const siteConfig = await getSiteConfig(pkg);
   const article = await getArticleBySlug(params.slug, pkg);
   
   const previousImages = (await parent).openGraph?.images || [];
@@ -42,7 +41,7 @@ export async function generateMetadata({ params, searchParams }: Props, parent: 
 export default async function ArticlePage({ params, searchParams }: Props) {
   const pkg = typeof searchParams?.pkg === 'string' ? searchParams.pkg : undefined;
   const article = await getArticleBySlug(params.slug, pkg);
-  const siteConfig = await getSiteConfig(pkg) ?? fallbackSiteConfig;
+  const siteConfig = await getSiteConfig(pkg);
 
   if (!article) {
     notFound();

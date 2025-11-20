@@ -1,4 +1,8 @@
+
 import { z } from 'zod';
+import { articles, updates } from '@/lib/data';
+import fs from 'fs/promises';
+import path from 'path';
 
 const ArticleSchema = z.object({
     slug: z.string(),
@@ -37,7 +41,7 @@ const SiteConfigSchema = z.object({
     }).optional().nullable(),
     header: z.object({
         logo: z.object({
-            url: z.string().url(),
+            url: z.string().url().or(z.literal("")),
             alt: z.string(),
         }),
     }),
@@ -95,10 +99,29 @@ export type Article = z.infer<typeof ArticleSchema>;
 export type Section = z.infer<typeof SectionSchema>;
 export type Update = Article;
 
-export const getSiteConfig = async (pkg?: string): Promise<SiteConfig | null> => {
+let defaultConfig: SiteConfig | null = null;
+
+const fetchDefaultConfig = async (): Promise<SiteConfig> => {
+    if (defaultConfig) {
+        return defaultConfig;
+    }
+    try {
+        const filePath = path.join(process.cwd(), 'public', 'default-site-config.json');
+        const fileContents = await fs.readFile(filePath, 'utf8');
+        const data = JSON.parse(fileContents);
+        const parsed = SiteConfigSchema.parse(data);
+        defaultConfig = parsed;
+        return parsed;
+    } catch (error) {
+        console.error("CRITICAL: Failed to read or parse default site configuration from file system.", error);
+        // This is a critical failure, we should throw to avoid unexpected behavior.
+        throw new Error("Could not load the default site configuration. The application cannot start.");
+    }
+};
+
+export const getSiteConfig = async (pkg?: string): Promise<SiteConfig> => {
     if (!pkg) {
-        // When no pkg is provided, we'll let the caller handle the fallback.
-        return null;
+        return fetchDefaultConfig();
     }
 
     const apiUrl = `https://api.us.apks.cc/game/site-config?pkg=${pkg}`;
@@ -107,8 +130,8 @@ export const getSiteConfig = async (pkg?: string): Promise<SiteConfig | null> =>
         const response = await fetch(apiUrl, { cache: 'no-store' });
         
         if (!response.ok) {
-            console.error(`API request failed with status ${response.status} for pkg: ${pkg}.`);
-            return null; // Let caller handle fallback
+             console.error(`API request failed with status ${response.status} for pkg: ${pkg}. Falling back to default.`);
+            return fetchDefaultConfig();
         }
 
         const data = await response.json();
@@ -117,28 +140,27 @@ export const getSiteConfig = async (pkg?: string): Promise<SiteConfig | null> =>
         if (parsedData.success) {
             return parsedData.data;
         } else {
-            console.error(`Failed to parse dynamic config for pkg: ${pkg}.`, parsedData.error.toString());
-            return null; // Let caller handle fallback
+            console.error(`Failed to parse dynamic config for pkg: ${pkg}. Falling back to default.`, parsedData.error.toString());
+            return fetchDefaultConfig();
         }
     } catch (error) {
-        console.error(`Error fetching or parsing site config for pkg: ${pkg}:`, error);
-        return null; // Let caller handle fallback
+        console.error(`Error fetching or parsing site config for pkg: ${pkg}. Falling back to default:`, error);
+        return fetchDefaultConfig();
     }
 };
 
 export const getArticleBySlug = async (slug: string, pkg?: string): Promise<Article | null> => {
     const config = await getSiteConfig(pkg);
-    if (config) {
-        for (const section of config.sections) {
-            const article = section.items.find((item) => item.slug === slug);
-            if (article) {
-                return article;
-            }
+    
+    for (const section of config.sections) {
+        const article = section.items.find((item) => item.slug === slug);
+        if (article) {
+            return article;
         }
     }
     
-    // Fallback to local data if dynamic fetch fails or article not found
-    const { articles, updates } = await import('@/lib/data');
+    // If article not found in config, fall back to local data.
+    // This is useful for default articles that might not be in every dynamic config.
     const allItems = [...articles, ...updates];
     return allItems.find(a => a.slug === slug) || null;
 };
