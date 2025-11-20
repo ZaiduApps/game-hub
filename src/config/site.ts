@@ -1,9 +1,4 @@
 import { z } from 'zod';
-import type { SiteConfig } from './default-site-config';
-import { defaultSiteConfig } from './default-site-config';
-
-// Re-exporting types from the new default config file
-export type { SiteConfig, Article, Section, Update };
 
 const ArticleSchema = z.object({
     slug: z.string(),
@@ -12,7 +7,7 @@ const ArticleSchema = z.object({
     content: z.string(),
     author: z.string().optional(),
     date: z.string(),
-    imageUrl: z.string().url(),
+    imageUrl: z.string().url().or(z.literal("")),
     imageHint: z.string(),
     version: z.string().optional(),
 });
@@ -39,7 +34,7 @@ const SiteConfigSchema = z.object({
         sogouVerification: z.string().optional(),
         qihuVerification: z.string().optional(),
         baiduAnalyticsId: z.string().optional(),
-    }).optional(),
+    }).optional().nullable(),
     header: z.object({
         logo: z.object({
             url: z.string().url(),
@@ -95,50 +90,55 @@ const SiteConfigSchema = z.object({
     sections: z.array(SectionSchema),
 });
 
+export type SiteConfig = z.infer<typeof SiteConfigSchema>;
+export type Article = z.infer<typeof ArticleSchema>;
+export type Section = z.infer<typeof SectionSchema>;
+export type Update = Article;
 
-export const getSiteConfig = async (pkg?: string): Promise<SiteConfig> => {
+export const getSiteConfig = async (pkg?: string): Promise<SiteConfig | null> => {
     if (!pkg) {
-        console.log("No pkg provided, using default site config.");
-        return defaultSiteConfig;
+        // When no pkg is provided, we'll let the caller handle the fallback.
+        return null;
     }
 
     const apiUrl = `https://api.us.apks.cc/game/site-config?pkg=${pkg}`;
     
     try {
-        console.log(`Fetching site config from: ${apiUrl}`);
         const response = await fetch(apiUrl, { cache: 'no-store' });
         
         if (!response.ok) {
-            console.error(`API request failed with status ${response.status}, falling back to default.`);
-            return defaultSiteConfig;
+            console.error(`API request failed with status ${response.status} for pkg: ${pkg}.`);
+            return null; // Let caller handle fallback
         }
 
         const data = await response.json();
         const parsedData = SiteConfigSchema.safeParse(data);
         
         if (parsedData.success) {
-            console.log("Successfully fetched and parsed dynamic config.");
-            // Deep merge the dynamic config with the default config
-            return parsedData.data as SiteConfig;
+            return parsedData.data;
         } else {
-            console.error("Failed to parse dynamic config, falling back to default.", parsedData.error.toString());
-            return defaultSiteConfig;
+            console.error(`Failed to parse dynamic config for pkg: ${pkg}.`, parsedData.error.toString());
+            return null; // Let caller handle fallback
         }
     } catch (error) {
-        console.error("Error fetching or parsing site config, falling back to default:", error);
-        return defaultSiteConfig;
+        console.error(`Error fetching or parsing site config for pkg: ${pkg}:`, error);
+        return null; // Let caller handle fallback
     }
 };
 
-
-export const getArticleBySlug = async (slug: string, pkg?: string) => {
+export const getArticleBySlug = async (slug: string, pkg?: string): Promise<Article | null> => {
     const config = await getSiteConfig(pkg);
-    for (const section of config.sections) {
-        if (!section.items) continue;
-        const article = section.items.find((item: any) => item.slug === slug);
-        if (article) {
-            return article;
+    if (config) {
+        for (const section of config.sections) {
+            const article = section.items.find((item) => item.slug === slug);
+            if (article) {
+                return article;
+            }
         }
     }
-    return null;
+    
+    // Fallback to local data if dynamic fetch fails or article not found
+    const { articles, updates } = await import('@/lib/data');
+    const allItems = [...articles, ...updates];
+    return allItems.find(a => a.slug === slug) || null;
 };

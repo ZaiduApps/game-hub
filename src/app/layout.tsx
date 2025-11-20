@@ -1,9 +1,9 @@
-
 import type { Metadata, ResolvingMetadata } from 'next';
 import { Suspense } from 'react';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import { getSiteConfig } from '@/config/site';
+import { fallbackSiteConfig } from '@/lib/data';
 import Script from 'next/script';
 
 type LayoutProps = {
@@ -14,7 +14,7 @@ type LayoutProps = {
 
 export async function generateMetadata({ searchParams }: LayoutProps, parent: ResolvingMetadata): Promise<Metadata> {
   const pkg = searchParams?.pkg as string | undefined;
-  const siteConfig = await getSiteConfig(pkg);
+  const siteConfig = await getSiteConfig(pkg) ?? fallbackSiteConfig;
   
   const previousImages = (await parent).openGraph?.images || [];
 
@@ -38,7 +38,6 @@ export async function generateMetadata({ searchParams }: LayoutProps, parent: Re
     metadata.verification!.google = siteConfig.analytics.googleVerification;
   }
   if (siteConfig.analytics?.baiduVerification) {
-    // There is no direct 'baidu' in metadata.verification, so we use 'other'
      metadata.verification!.other = {
       ...(metadata.verification!.other),
       'baidu-site-verification': siteConfig.analytics.baiduVerification,
@@ -65,7 +64,7 @@ export default async function RootLayout({
   searchParams,
 }: LayoutProps) {
   const pkg = searchParams?.pkg as string | undefined;
-  const siteConfig = await getSiteConfig(pkg);
+  const siteConfig = await getSiteConfig(pkg) ?? fallbackSiteConfig;
 
   return (
     <html lang="zh-Hans" className="dark">

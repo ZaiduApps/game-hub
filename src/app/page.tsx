@@ -1,4 +1,3 @@
-
 import Image from 'next/image';
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -6,10 +5,10 @@ import { Button } from '@/components/ui/button';
 import { GameDownloadButtons } from '@/components/GameDownloadButtons';
 import { ArrowRight } from 'lucide-react';
 import { CommunitySquare } from '@/components/CommunitySquare';
-import { getSiteConfig, SiteConfig } from '@/config/site';
+import { getSiteConfig } from '@/config/site';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
-
+import { fallbackSiteConfig } from '@/lib/data';
 
 interface HomeProps {
   searchParams: { [key: string]: string | string[] | undefined };
@@ -18,11 +17,7 @@ interface HomeProps {
 
 export default async function Home({ searchParams }: HomeProps) {
   const pkg = typeof searchParams?.pkg === 'string' ? searchParams.pkg : undefined;
-  const siteConfig = await getSiteConfig(pkg);
-
-  if (!siteConfig) {
-    return null;
-  }
+  const siteConfig = await getSiteConfig(pkg) ?? fallbackSiteConfig;
 
   const keywords = siteConfig.seo?.keywords || [];
   const communitySection = siteConfig.sections?.find(s => s.id === 'community');
