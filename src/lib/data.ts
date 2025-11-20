@@ -1,6 +1,4 @@
 
-import type { SiteConfig } from "@/config/site";
-
 export interface Article {
   slug: string;
   title: string;
@@ -120,8 +118,3 @@ This patch also introduced the new **AMR sniper rifle**, capable of one-shotting
         imageHint: 'desert city',
     },
 ];
-
-export const getArticleBySlugFromData = (slug: string) => {
-    const allItems = [...articles, ...updates];
-    return allItems.find(a => a.slug === slug);
-}

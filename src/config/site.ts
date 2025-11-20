@@ -99,8 +99,8 @@ export type Article = z.infer<typeof ArticleSchema>;
 export type Section = z.infer<typeof SectionSchema>;
 export type Update = Article;
 
-let defaultConfig: SiteConfig | null = null;
 
+let defaultConfig: SiteConfig | null = null;
 const fetchDefaultConfig = async (): Promise<SiteConfig> => {
     if (defaultConfig) {
         return defaultConfig;
@@ -113,9 +113,8 @@ const fetchDefaultConfig = async (): Promise<SiteConfig> => {
         defaultConfig = parsed;
         return parsed;
     } catch (error) {
-        console.error("CRITICAL: Failed to read or parse default site configuration from file system.", error);
-        // This is a critical failure, we should throw to avoid unexpected behavior.
-        throw new Error("Could not load the default site configuration. The application cannot start.");
+        console.error("CRITICAL: Failed to read or parse default site configuration.", error);
+        throw new Error("Could not load the default site configuration.");
     }
 };
 
@@ -159,8 +158,7 @@ export const getArticleBySlug = async (slug: string, pkg?: string): Promise<Arti
         }
     }
     
-    // If article not found in config, fall back to local data.
-    // This is useful for default articles that might not be in every dynamic config.
+    // Fallback to local data if not found in any section of the fetched config
     const allItems = [...articles, ...updates];
     return allItems.find(a => a.slug === slug) || null;
 };

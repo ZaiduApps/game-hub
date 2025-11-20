@@ -1,9 +1,9 @@
+
 import type { Metadata, ResolvingMetadata } from 'next';
 import { Suspense } from 'react';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import { getSiteConfig } from '@/config/site';
-import { fallbackSiteConfig } from '@/lib/data';
 import Script from 'next/script';
 
 type LayoutProps = {
@@ -14,7 +14,7 @@ type LayoutProps = {
 
 export async function generateMetadata({ searchParams }: LayoutProps, parent: ResolvingMetadata): Promise<Metadata> {
   const pkg = searchParams?.pkg as string | undefined;
-  const siteConfig = await getSiteConfig(pkg) ?? fallbackSiteConfig;
+  const siteConfig = await getSiteConfig(pkg);
   
   const previousImages = (await parent).openGraph?.images || [];
 
@@ -33,7 +33,6 @@ export async function generateMetadata({ searchParams }: LayoutProps, parent: Re
     },
   };
   
-  // Dynamically add verification meta tags
   if (siteConfig.analytics?.googleVerification) {
     metadata.verification!.google = siteConfig.analytics.googleVerification;
   }
@@ -64,7 +63,7 @@ export default async function RootLayout({
   searchParams,
 }: LayoutProps) {
   const pkg = searchParams?.pkg as string | undefined;
-  const siteConfig = await getSiteConfig(pkg) ?? fallbackSiteConfig;
+  const siteConfig = await getSiteConfig(pkg);
 
   return (
     <html lang="zh-Hans" className="dark">
