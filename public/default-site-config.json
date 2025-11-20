@@ -1,144 +1,157 @@
 
 {
-    "name": "PUBG Mobile",
-    "seo": {
-        "title": "地铁逃生手游官网 | 下载、更新、攻略 - 官方正版入口",
-        "description": "欢迎访问PUBG Mobile中心，提供最新游戏下载、更新日志、游戏攻略和玩家社区，支持安卓与iOS系统，一站式掌握刺激战场动态。",
-        "keywords": ["PUBG Mobile","PUBG Mobile 官网","PUBG Mobile 下载","吃鸡手游","刺激战场","地铁逃生","和平精英国际服","PUBG Mobile 更新","PUBG Mobile 攻略","pubgm apk","pubgm 安卓下载","PUBG Mobile iOS下载"],
-        "ogImage": "https://cdn.apks.cc/blinko/1753974441995-1753974441505-share.jpg"
+  "name": "PUBG Mobile",
+  "seo": {
+    "title": "地铁逃生手游官网 | 下载、更新、攻略 - 官方正版入口",
+    "description": "欢迎访问PUBG Mobile中心，提供最新游戏下载、更新日志、游戏攻略和玩家社区，支持安卓与iOS系统，一站式掌握刺激战场动态。",
+    "keywords": [
+      "PUBG Mobile",
+      "PUBG Mobile 官网",
+      "PUBG Mobile 下载",
+      "吃鸡手游",
+      "刺激战场",
+      "地铁逃生",
+      "和平精英国际服",
+      "PUBG Mobile 更新",
+      "PUBG Mobile 攻略",
+      "pubgm apk",
+      "pubgm 安卓下载",
+      "PUBG Mobile iOS下载"
+    ],
+    "ogImage": "https://cdn.apks.cc/blinko/1753974441995-1753974441505-share.jpg"
+  },
+  "analytics": {
+      "baiduVerification": "codeva-9XyV2k6cAS",
+      "googleVerification": "wheyJrkeJteNmtsowo1dyWiAtd18QqJR0VGilx25600",
+      "sogouVerification": "2rU7VTaXRK",
+      "qihuVerification": "999219046b1b9e0ef3a7f7c0f481fe20",
+      "baiduAnalyticsId": "b2e255a5512aa46a4f692adf9c8bfe00"
+  },
+  "header": {
+    "logo": {
+      "url": "https://cdn.apks.cc/blinko/unnamed.webp",
+      "alt": "PUBG Mobile Logo"
+    }
+  },
+  "hero": {
+    "backgroundImage": "https://cdn.apks.cc/blinko/1753974441995-1753974441505-share.jpg",
+    "title": "立即下载，体验极致大逃杀",
+    "description": "加入全球数百万玩家的行列，在手机上体验最刺激、最真实的战术竞技。不断更新的地图、武器和游戏模式等着你来探索。"
+  },
+  "downloads": {
+    "googlePlay": {
+      "url": "https://play.google.com/store/apps/details?id=com.tencent.ig",
+      "backgroundImage": "https://cdn.apks.cc/blinko/1753972567787-1753972566208-google_apk_download.png",
+      "srText": "在 Google Play 下载"
     },
-    "analytics": {
-        "baiduVerification": "codeva-9XyV2k6cAS",
-        "googleVerification": "wheyJrkeJteNmtsowo1dyWiAtd18QqJR0VGilx25600",
-        "sogouVerification": "2rU7VTaXRK",
-        "qihuVerification": "999219046b1b9e0ef3a7f7c0f481fe20",
-        "baiduAnalyticsId": "b2e255a5512aa46a4f692adf9c8bfe00"
+    "appStore": {
+      "url": "https://apps.apple.com/us/app/pubg-mobile/id1330123889",
+      "backgroundImage": "https://cdn.apks.cc/blinko/1753972022261-1753972021905-app_store.png",
+      "srText": "在 App Store 下载"
     },
-    "header": {
-        "logo": {
-            "url": "https://cdn.apks.cc/blinko/unnamed.webp",
-            "alt": "PUBG Mobile Logo"
-        }
+    "apk": {
+      "backgroundImage": "https://cdn.apks.cc/blinko/1753971933326-1753971932556-apk_download.png",
+      "line1": "Android Download",
+      "line2": "安卓下载",
+      "dialog": {
+        "title": "选择下载渠道",
+        "description": "请选择您偏好的下载方式。",
+        "panUrl": "https://www.123684.com/s/4H3LVv-rZkI",
+        "officialUrl": ""
+      }
+    }
+  },
+  "video": {
+    "id": "video",
+    "title": "版本亮点",
+    "navLabel": "精彩视频",
+    "enabled": true,
+    "url": "https://www.youtube.com/embed/S_85nL4p2as",
+    "playerTitle": "PUBG Mobile Mecha Fusion Trailer"
+  },
+  "footer": {
+    "description": "推荐收藏，分享给您的好友吧！这里是您获取《PUBG Mobile》新闻、更新和社区信息的最终目的地。这是一个非官方的粉丝自制网站。",
+    "copyright": "© {year} PUBG Mobile. 保留所有权利. 游戏内容和材料均为其各自发行商及其许可人的商标和版权。",
+    "feedback": {
+      "email": "apkscc-feedback@foxmail.com",
+      "buttonText": "反馈建议",
+      "dialogTitle": "提交您的反馈",
+      "dialogDescription": "我们非常重视您的意见，请填写以下信息。您的建议将帮助我们改进网站。"
+    }
+  },
+  "sections": [
+    {
+      "id": "community",
+      "title": "交流广场",
+      "navLabel": "社区",
+      "enabled": true,
+      "items": []
     },
-    "hero": {
-        "backgroundImage": "https://cdn.apks.cc/blinko/unnamed.webp",
-        "title": "PUBG MOBILE",
-        "description": "立即下载，体验极致的战术竞技。探索广阔的地图，与全球玩家一较高下，成为最后的赢家！"
-    },
-    "downloads": {
-        "googlePlay": {
-            "url": "https://play.google.com/store/apps/details?id=com.tencent.ig",
-            "backgroundImage": "https://cdn.apks.cc/blinko/1753972567787-1753972566208-google_apk_download.png",
-            "srText": "在 Google Play 下载"
-        },
-        "appStore": {
-            "url": "https://apps.apple.com/us/app/pubg-mobile/id1330123889",
-            "backgroundImage": "https://cdn.apks.cc/blinko/1753972022261-1753972021905-app_store.png",
-            "srText": "在 App Store 下载"
-        },
-        "apk": {
-            "backgroundImage": "https://cdn.apks.cc/blinko/1753971933326-1753971932556-apk_download.png",
-            "line1": "Android Download",
-            "line2": "APK 下载",
-            "dialog": {
-                "title": "选择下载渠道",
-                "description": "请选择您偏好的下载方式。建议使用网盘下载以获得更快的速度。",
-                "panUrl": "https://www.123pan.com/s/4H3LVv-pUHI-a7Fod",
-                "officialUrl": ""
-            }
-        }
-    },
-    "video": {
-        "id": "video",
-        "title": "官方频道",
-        "url": "https://www.youtube.com/embed/QU32v1_s480",
-        "playerTitle": "PUBG MOBILE 官方频道",
-        "navLabel": "官方频道",
-        "enabled": true
-    },
-    "footer": {
-        "description": "推荐收藏，分享给您的好友吧！这里是您获取《PUBG Mobile》新闻、更新和社区信息的最终目的地。这是一个非官方的粉丝自制网站。",
-        "copyright": "© {year} PUBG Mobile. 保留所有权利. 游戏内容和材料均为其各自发行商及其许可人的商标和版权。",
-        "feedback": {
-            "email": "apkscc-feedback@foxmail.com",
-            "buttonText": "反馈建议",
-            "dialogTitle": "提交您的反馈",
-            "dialogDescription": "我们非常重视您的意见，请填写以下信息。您的建议将帮助我们改进网站。"
-        }
-    },
-    "sections": [
+    {
+      "id": "articles",
+      "title": "最新攻略",
+      "navLabel": "攻略",
+      "enabled": true,
+      "items": [
         {
-            "id": "community",
-            "title": "交流广场",
-            "navLabel": "社区",
-            "enabled": true,
-            "items": []
-        },
-        {
-            "id": "articles",
-            "title": "最新攻略",
-            "navLabel": "攻略",
-            "enabled": true,
-            "items": [
-                {
-                    "slug": "erangel-remastered-guide",
-                    "title": "决胜新纪元：重制版艾伦格地图深度解析",
-                    "summary": "经典地图艾伦格迎来新生。探索全新地点、掌握高级战术，揭开成为战场主宰的秘密。",
-                    "content": "> 标志性的艾伦格地图在视觉和战术层面都得到了重大革新。熟悉的地点现在拥有了全新的建筑结构、更优的掩体和显著提升的画面细节。\n\n# 核心变动\n- **核电站、矿场与监狱:** 这些区域变得更加复杂，为伏击和战略部署提供了新的可能。\n- **G港集装箱:** 曾经被忽视的区域现在增加了更多的垂直空间。\n\n### 专家提示\n1.  **攀爬抓握:** 别忘了使用新的攀爬机制来登上屋顶和意想不到的制高点。这在决赛圈中能为您带来巨大优势。\n2.  **武器选择:** M416依然是万金油之选，但Beryl M762在近距离战斗中更具毁灭性。在训练场多加练习，掌控它的后坐力，以发挥其全部潜力。",
-                    "author": "绝地策划师",
-                    "date": "2024-08-15",
-                    "imageUrl": "https://cdn.apks.cc/blinko/unnamed.webp",
-                    "imageHint": "battlefield landscape"
-                },
-                {
-                    "slug": "squad-tactics-101",
-                    "title": "团队战术101：沟通定成败",
-                    "summary": "团队合作铸就辉煌。学习关键的沟通与站位策略，带领你的队伍走向胜利的晚宴。",
-                    "content": "在团队模式中取胜，更多依赖于协调一致的团队协作而非个人技术。任何成功队伍的基石都是清晰、简洁的沟通。\n\n### 角色与沟通\n- **明确分工:** 比赛开始前分配好角色：一名指挥官、一名狙击手/支援位，以及两名突击手。\n- **善用标记:** 频繁使用游戏内的标记系统。通过罗盘方位报出敌人位置（“敌人285方向”），描述其装备（“三级头”），并说明你的意图（“准备突击蓝房子”）。\n\n### 站位策略\n避免扎堆，以减少被手雷和扫射团灭的风险。保持一个防御圈，每位成员负责不同角度。这种“分散”站位能让你们收集更多信息并控制更大区域。\n\n> 交火时，集中火力攻击单一目标以迅速将其击倒。4v3的人数优势是改变战局的关键。",
-                    "author": "战术指挥官",
-                    "date": "2024-08-10",
-                    "imageUrl": "https://cdn.apks.cc/blinko/unnamed.webp",
-                    "imageHint": "team soldiers"
-                },
-                {
-                    "slug": "new-weapon-analysis",
-                    "title": "新武器测评：P90冲锋枪全面解析",
-                    "summary": "空投专属武器P90冲锋枪现已加入战场。它值得你追逐吗？我们来分析其优缺点。",
-                    "content": "空投专属武器库的最新成员是P90冲锋枪。该武器使用5.7毫米弹药，拥有高达50发的弹匣容量和极快的射速。\n\n**优点:**\n- 主要优势在于近距离作战。P90能在敌人反应过来之前就将其撕成碎片。\n- 大弹匣意味着你可以连续对抗多个敌人而无需换弹。\n\n**缺点:**\n- 在中远距离下伤害衰减明显。\n- 其独特的弹药类型意味着你无法从倒地的敌人那里补充。你只能使用空投箱里提供的弹药。\n\n***\n\n*我们的结论:* P90是一把看情况的杀器。如果你打法激进，喜欢清扫楼房，那它就是游戏中最强的武器之一。对于喜欢远距离交战的玩家来说，坚守一把突击步枪可能是更好的选择。",
-                    "author": "武器专家",
-                    "date": "2024-08-05",
-                    "imageUrl": "https://cdn.apks.cc/blinko/unnamed.webp",
-                    "imageHint": "futuristic weapon"
-                }
-            ]
+          "slug": "erangel-remastered-guide",
+          "title": "掌控埃伦格：重制经典地图指南",
+          "summary": "经典地图埃伦格已经重制。探索新的地点、策略和秘密，主宰战场。",
+          "content": ">标志性的埃伦格地图在视觉和战术上都进行了重大改革。熟悉的老地方现在拥有了新的建筑、更好的掩体和增强的图形保真度。\n\n# 主要变化\n- **Mylta Power、Quarry和Prison:** 这些区域现在变得更加复杂，为伏击和战略部署提供了新的机会。\n- **Georgopol集装箱:** 这个以前被忽视的区域现在提供了更多的垂直空间。\n\n### 专业提示\n1.  **抓爬机制:** 记得使用新的抓爬机制来进入屋顶和意想不到的制高点。这能在决赛圈给你带来巨大优势。\n2.  **武器选择:** M416仍然是一个多功能的选择，但Beryl M762现在在近距离战斗中威力更大。在训练场练习控制它的后坐力，以释放其全部潜力。",
+          "author": "PlayerUnknown",
+          "date": "2024-08-15",
+          "imageUrl": "https://cdn.apks.cc/blinko/unnamed.webp",
+          "imageHint": "battlefield landscape"
         },
         {
-            "id": "updates",
-            "title": "游戏大事件",
-            "navLabel": "更新",
-            "enabled": true,
-            "items": [
-                {
-                    "slug": "version-3-2-0",
-                    "version": "3.2.0",
-                    "title": "3.2版本：机甲聚变",
-                    "summary": "机甲聚变更新降临！驾驶巨型机甲，探索全新的钢铁方舟，并掌握喷气背包带来的机动性。",
-                    "content": "3.2版本引入了激动人心的机甲聚变模式。玩家现在可以寻找并驾驶拥有独特技能的强大机甲。\n\n- **行者:** 一款适合侦察的敏捷机甲。\n- **利维坦:** 一头能够施展毁灭性火力的重装猛兽。\n\n一个新的兴趣点——**钢铁方舟**——已被添加到艾伦格。这座巨大的飞行堡垒是一个高风险、高回报的降落点，充满了顶级战利品。\n\n为了帮助穿越战场，所有玩家现在都配备了个人喷气背包，可以进行短暂的飞行，实现惊人的机动性。\n\n此次更新还包括各种生活质量改进、新的赛季通行证，以及对几种突击步枪的平衡性调整。",
-                    "date": "2024-07-28",
-                    "imageUrl": "https://cdn.apks.cc/blinko/unnamed.webp",
-                    "imageHint": "giant robot"
-                },
-                {
-                    "slug": "version-3-1-0",
-                    "version": "3.1.0",
-                    "title": "3.1版本：天空奇境",
-                    "summary": "步入一个充满魔法与神秘的世界，体验天空奇境更新。探索全新的神灯岛屿，驾驭会飞的魔毯。",
-                    "content": "天空奇境更新为战场带来了一丝魔法色彩。全新的神灯岛屿是一个充满活力、宝藏丰富的地点，拥有互动元素。敲响铜锣召唤物资，或寻找可以实现你强大战利品愿望的神灯精灵。\n\n**飞毯**是一种全新的双人载具，可以在地图上安静迅速地移动。它非常适合进行隐秘的战术转移。\n\n该补丁还引入了全新的**AMR狙击步枪**，能够一枪击穿三级头盔，并修复了大量错误和进行了性能优化。",
-                    "date": "2024-06-15",
-                    "imageUrl": "https://cdn.apks.cc/blinko/unnamed.webp",
-                    "imageHint": "desert city"
-                }
-            ]
+          "slug": "squad-tactics-101",
+          "title": "小队战术101：沟通是关键",
+          "summary": "团队合作才能取得胜利。学习必要的沟通和站位策略，带领你的小队走向胜利。",
+          "content": "在小队模式中获胜，更多的是关于协调一致的团队合作，而非个人技术。任何成功小队的基础都是清晰、简洁的沟通。\n\n### 角色与沟通\n- **确定角色:** 比赛开始前，确定一名领队/指挥官、一名狙击手/支援和两名突击手。\n- **使用标记:** 坚持使用游戏内的标记。使用罗盘方位（“敌人在285方向”）报出敌人位置，描述他们的装备（“三级头”），并说明你的意图（“正在冲蓝房子”）。\n\n### 站位\n避免扎堆，以减少对榴弹和扫射的脆弱性。保持一个周边防御圈，每个成员覆盖不同角度。这种“分散”可以让你收集更多信息并控制更大区域。\n\n> 交战时，集中火力攻击一个目标，迅速将其击倒。4v3的优势是改变游戏局势的关键。",
+          "author": "指挥官",
+          "date": "2024-08-10",
+          "imageUrl": "https://cdn.apks.cc/blinko/unnamed.webp",
+          "imageHint": "team soldiers"
+        },
+        {
+          "slug": "new-weapon-analysis",
+          "title": "武器分析：P90已经到来",
+          "summary": "P90冲锋枪现在可在空投中获得。它值得去追吗？我们来分析一下它的优缺点。",
+          "content": "空投专属武器库的最新成员是P90冲锋枪。这款武器使用5.7毫米子弹，拥有巨大的50发弹匣和极高的射速。\n\n**优点:**\n- 它的主要优势在于近距离战斗。P90可以在对手反应过来之前将其撕碎。\n- 大弹匣意味着你可以在不换弹的情况下对付多个敌人。\n\n**缺点:**\n- 在中远距离下伤害显著降低。\n- 其独特的弹药类型意味着你无法从倒下的敌人那里补充弹药。你只能拥有箱子里的那点弹药。\n\n***\n\n*我们的结论:* P90是一个看情况的怪物。如果你玩的是激进的、清楼的风格，它是游戏中最强的武器之一。对于喜欢远距离作战的玩家来说，坚持使用AR可能更好。",
+          "author": "枪手",
+          "date": "2024-08-05",
+          "imageUrl": "https://cdn.apks.cc/blinko/unnamed.webp",
+          "imageHint": "futuristic weapon"
         }
-    ]
+      ]
+    },
+    {
+      "id": "updates",
+      "title": "最新动态",
+      "navLabel": "更新",
+      "enabled": true,
+      "items": [
+        {
+          "slug": "version-3-2-0",
+          "version": "3.2.0",
+          "title": "3.2版本：机甲聚变",
+          "summary": "机甲聚变更新来了！驾驶巨型机甲，探索新的钢铁方舟，并掌握新的喷气背包机制。",
+          "content": "3.2版本引入了激动人心的机甲聚变模式。玩家现在可以找到并驾驶强大的机甲，每种机甲都具有独特的能力。\n\n- **行者:** 一种适合侦察的敏捷机甲。\n- **巨兽:** 一种重装武器，能够进行毁灭性的火力压制。\n\n一个新的兴趣点，**钢铁方舟**，已添加到埃伦格。这个巨大的飞行堡垒是一个高风险、高回报的降落点，充满了顶级战利品。\n\n为了帮助穿越战场，所有玩家现在都配备了个人喷气背包，可以进行短暂的飞行和令人难以置信的机动性。\n\n本次更新还包括各种生活质量的改进、新的赛季通行证，以及对几种突击步枪的重新平衡。",
+          "date": "2024-07-28",
+          "imageUrl": "https://cdn.apks.cc/blinko/unnamed.webp",
+          "imageHint": "giant robot"
+        },
+        {
+          "slug": "version-3-1-0",
+          "version": "3.1.0",
+          "title": "3.1版本：天方夜谭",
+          "summary": "随着天方夜谭更新，步入一个充满魔幻与神秘的世界。发现新的神灯岛并乘坐飞毯。",
+          "content": "天方夜谭更新为战场带来了一丝魔力。新的神灯岛是一个充满活力、宝藏丰富的地点，带有互动元素。敲响锣鼓召唤补给，或寻找可以满足你获得强大战利品愿望的神灯精灵。\n\n**飞毯**是一种新的双人载具，可以在地图上进行无声快速的移动。它非常适合隐秘转移。\n\n此补丁还推出了新的**AMR狙击步枪**，能够一枪击穿三级头盔，以及大量的错误修复和性能优化。",
+          "date": "2024-06-15",
+          "imageUrl": "https://cdn.apks.cc/blinko/unnamed.webp",
+          "imageHint": "desert city"
+        }
+      ]
+    }
+  ]
 }

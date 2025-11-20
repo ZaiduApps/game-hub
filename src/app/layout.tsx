@@ -6,6 +6,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { getSiteConfig } from '@/config/site';
 import Script from 'next/script';
 
+export const dynamic = 'force-dynamic';
+
 type LayoutProps = {
   children: React.ReactNode;
   params: {};
@@ -19,6 +21,7 @@ export async function generateMetadata({ searchParams }: LayoutProps, parent: Re
   const previousImages = (await parent).openGraph?.images || [];
 
   const metadata: Metadata = {
+    metadataBase: new URL('https://example.com'), // Replace with your actual domain
     title: {
       default: `${siteConfig.name} - ${siteConfig.seo.title}`,
       template: `%s - ${siteConfig.name}`,
@@ -31,6 +34,12 @@ export async function generateMetadata({ searchParams }: LayoutProps, parent: Re
       description: siteConfig.seo.description,
       images: siteConfig.seo.ogImage ? [siteConfig.seo.ogImage, ...previousImages] : previousImages,
     },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${siteConfig.name} - ${siteConfig.seo.title}`,
+      description: siteConfig.seo.description,
+      images: siteConfig.seo.ogImage ? [siteConfig.seo.ogImage] : [],
+    }
   };
   
   if (siteConfig.analytics?.googleVerification) {
@@ -67,12 +76,7 @@ export default async function RootLayout({
 
   return (
     <html lang="zh-Hans" className="dark">
-      <head />
-      <body className="font-body antialiased bg-background text-foreground">
-        <Suspense>
-          <main>{children}</main>
-        </Suspense>
-        <Toaster />
+      <head>
         {siteConfig.analytics?.baiduAnalyticsId && (
           <Script id="baidu-analytics" strategy="afterInteractive">
             {`
@@ -86,6 +90,12 @@ export default async function RootLayout({
             `}
           </Script>
         )}
+      </head>
+      <body className="font-body antialiased bg-background text-foreground">
+        <Suspense>
+          <main>{children}</main>
+        </Suspense>
+        <Toaster />
       </body>
     </html>
   );

@@ -10,10 +10,11 @@ import { getSiteConfig } from '@/config/site';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 
+export const dynamic = 'force-dynamic';
+
 interface HomeProps {
   searchParams: { [key: string]: string | string[] | undefined };
 }
-
 
 export default async function Home({ searchParams }: HomeProps) {
   const pkg = typeof searchParams?.pkg === 'string' ? searchParams.pkg : undefined;

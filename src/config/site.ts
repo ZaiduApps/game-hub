@@ -1,6 +1,5 @@
 
 import { z } from 'zod';
-import { articles, updates } from '@/lib/data';
 import fs from 'fs/promises';
 import path from 'path';
 
@@ -99,7 +98,6 @@ export type Article = z.infer<typeof ArticleSchema>;
 export type Section = z.infer<typeof SectionSchema>;
 export type Update = Article;
 
-
 let defaultConfig: SiteConfig | null = null;
 const fetchDefaultConfig = async (): Promise<SiteConfig> => {
     if (defaultConfig) {
@@ -119,34 +117,30 @@ const fetchDefaultConfig = async (): Promise<SiteConfig> => {
 };
 
 export const getSiteConfig = async (pkg?: string): Promise<SiteConfig> => {
-    if (!pkg) {
-        return fetchDefaultConfig();
+    if (pkg) {
+        const apiUrl = `https://api.us.apks.cc/game/site-config?pkg=${pkg}`;
+        try {
+            const response = await fetch(apiUrl, { cache: 'no-store' });
+            if (response.ok) {
+                const data = await response.json();
+                const parsedData = SiteConfigSchema.safeParse(data);
+                if (parsedData.success) {
+                    return parsedData.data;
+                } else {
+                     console.error(`Failed to parse dynamic config for pkg: ${pkg}. Falling back to default.`, parsedData.error.toString());
+                }
+            } else {
+                console.error(`API request failed with status ${response.status} for pkg: ${pkg}. Falling back to default.`);
+            }
+        } catch (error) {
+            console.error(`Error fetching or parsing site config for pkg: ${pkg}. Falling back to default:`, error);
+        }
     }
-
-    const apiUrl = `https://api.us.apks.cc/game/site-config?pkg=${pkg}`;
     
-    try {
-        const response = await fetch(apiUrl, { cache: 'no-store' });
-        
-        if (!response.ok) {
-             console.error(`API request failed with status ${response.status} for pkg: ${pkg}. Falling back to default.`);
-            return fetchDefaultConfig();
-        }
-
-        const data = await response.json();
-        const parsedData = SiteConfigSchema.safeParse(data);
-        
-        if (parsedData.success) {
-            return parsedData.data;
-        } else {
-            console.error(`Failed to parse dynamic config for pkg: ${pkg}. Falling back to default.`, parsedData.error.toString());
-            return fetchDefaultConfig();
-        }
-    } catch (error) {
-        console.error(`Error fetching or parsing site config for pkg: ${pkg}. Falling back to default:`, error);
-        return fetchDefaultConfig();
-    }
+    // Fallback to default if no pkg or if API fails
+    return fetchDefaultConfig();
 };
+
 
 export const getArticleBySlug = async (slug: string, pkg?: string): Promise<Article | null> => {
     const config = await getSiteConfig(pkg);
@@ -158,7 +152,5 @@ export const getArticleBySlug = async (slug: string, pkg?: string): Promise<Arti
         }
     }
     
-    // Fallback to local data if not found in any section of the fetched config
-    const allItems = [...articles, ...updates];
-    return allItems.find(a => a.slug === slug) || null;
+    return null;
 };
