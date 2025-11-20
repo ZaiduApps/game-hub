@@ -9,6 +9,7 @@ import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from '@/co
 import { cn } from '@/lib/utils';
 import { ApkDownloadDialog } from '../ApkDownloadDialog';
 import { SiteConfig } from '@/config/site';
+import { usePathname } from 'next/navigation';
 
 const navIcons: { [key: string]: React.ElementType } = {
   home: Gamepad2,
@@ -20,12 +21,14 @@ const navIcons: { [key: string]: React.ElementType } = {
 
 interface HeaderProps {
   siteConfig: SiteConfig;
+  pkg?: string;
 }
 
-export function Header({ siteConfig }: HeaderProps) {
+export function Header({ siteConfig, pkg }: HeaderProps) {
   const [activeSection, setActiveSection] = useState('home');
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [isApkDialogOpen, setIsApkDialogOpen] = useState(false);
+  const pathname = usePathname();
   
   const navLinks = [
     { href: '#home', label: '首页', sectionId: 'home' },
@@ -40,6 +43,11 @@ export function Header({ siteConfig }: HeaderProps) {
   ];
 
   useEffect(() => {
+    if (pathname.includes('/articles/')) {
+        setActiveSection('');
+        return;
+    }
+
     const handleScroll = () => {
         const sectionsToObserve = navLinks
             .map(link => document.getElementById(link.sectionId))
@@ -65,15 +73,17 @@ export function Header({ siteConfig }: HeaderProps) {
     return () => {
         window.removeEventListener('scroll', handleScroll);
     };
-}, [navLinks]);
+  }, [navLinks, pathname]);
   
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
     const targetId = href.substring(1);
     
+    const rootPath = pkg ? `/${pkg}` : '/';
+
     // If we're on a different page, navigate to the homepage with the hash
-    if (window.location.pathname !== '/') {
-        window.location.href = `/${href}`;
+    if (!pathname.startsWith(rootPath) || pathname.includes('/articles')) {
+        window.location.href = `${rootPath}${href}`;
         return;
     }
 
@@ -95,6 +105,10 @@ export function Header({ siteConfig }: HeaderProps) {
     }
     setIsSheetOpen(false); // Close sheet on link click
   };
+  
+  const getRootPath = () => {
+    return pkg ? `/${pkg}` : '/';
+  }
 
   return (
     <>
@@ -112,7 +126,7 @@ export function Header({ siteConfig }: HeaderProps) {
                     <SheetContent side="left">
                       <SheetHeader>
                         <SheetTitle className="sr-only">主菜单</SheetTitle>
-                        <Link href="/" className="flex items-center space-x-2">
+                        <Link href={getRootPath()} className="flex items-center space-x-2">
                           <PubgLogo siteConfig={siteConfig} />
                         </Link>
                       </SheetHeader>
@@ -138,7 +152,7 @@ export function Header({ siteConfig }: HeaderProps) {
                     </SheetContent>
                   </Sheet>
                 </div>
-              <Link href="/" className="flex items-center space-x-2">
+              <Link href={getRootPath()} className="flex items-center space-x-2">
                   <PubgLogo siteConfig={siteConfig} />
               </Link>
               <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">

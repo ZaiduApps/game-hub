@@ -10,7 +10,7 @@ import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 
 type Props = {
-  params: { slug: string; pkg?: string };
+  params: { slug: string; pkg: string };
 }
 
 export async function generateMetadata({ params }: Props, parent: ResolvingMetadata): Promise<Metadata> {
@@ -46,7 +46,7 @@ export default async function ArticlePage({ params }: Props) {
 
   return (
     <>
-    <Header siteConfig={siteConfig} />
+    <Header siteConfig={siteConfig} pkg={params.pkg} />
     <article className="container mx-auto px-4 md:px-6 py-8 md:py-12">
       <div className="max-w-4xl mx-auto">
         <header className="mb-8">
@@ -75,8 +75,7 @@ export default async function ArticlePage({ params }: Props) {
         <CommentSection />
       </div>
     </article>
-    <Footer siteConfig={siteConfig} />
+    <Footer siteConfig={siteConfig} pkg={params.pkg} />
     </>
   );
 }
-

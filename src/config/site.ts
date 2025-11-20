@@ -3,6 +3,30 @@ import { z } from 'zod';
 import fs from 'fs/promises';
 import path from 'path';
 
+// Helper function for deep merging configurations
+function mergeDeep(target: any, source: any) {
+    const output = { ...target };
+    if (isObject(target) && isObject(source)) {
+        Object.keys(source).forEach(key => {
+            if (isObject(source[key])) {
+                if (!(key in target)) {
+                    Object.assign(output, { [key]: source[key] });
+                } else {
+                    output[key] = mergeDeep(target[key], source[key]);
+                }
+            } else {
+                Object.assign(output, { [key]: source[key] });
+            }
+        });
+    }
+    return output;
+}
+
+function isObject(item: any) {
+    return (item && typeof item === 'object' && !Array.isArray(item));
+}
+
+
 const ArticleSchema = z.object({
     slug: z.string(),
     title: z.string(),
@@ -13,7 +37,7 @@ const ArticleSchema = z.object({
     imageUrl: z.string().url().or(z.literal("")),
     imageHint: z.string(),
     version: z.string().optional(),
-});
+}).passthrough();
 
 const SectionSchema = z.object({
     id: z.string(),
@@ -21,7 +45,7 @@ const SectionSchema = z.object({
     navLabel: z.string(),
     enabled: z.boolean().optional(),
     items: z.array(ArticleSchema),
-});
+}).passthrough();
 
 const SiteConfigSchema = z.object({
     name: z.string(),
@@ -30,36 +54,32 @@ const SiteConfigSchema = z.object({
         description: z.string(),
         keywords: z.array(z.string()),
         ogImage: z.string().url().or(z.literal("")),
-    }),
+    }).passthrough(),
     analytics: z.object({
-        baiduVerification: z.string().optional(),
-        googleVerification: z.string().optional(),
-        sogouVerification: z.string().optional(),
-        qihuVerification: z.string().optional(),
-        baiduAnalyticsId: z.string().optional(),
-    }).optional().nullable(),
+       customHeadHtml: z.string().optional(),
+    }).passthrough().nullable(),
     header: z.object({
         logo: z.object({
             url: z.string().url().or(z.literal("")),
             alt: z.string(),
         }),
-    }),
+    }).passthrough(),
     hero: z.object({
         backgroundImage: z.string().url(),
         title: z.string(),
         description: z.string(),
-    }),
+    }).passthrough(),
     downloads: z.object({
         googlePlay: z.object({
             url: z.string().url().or(z.literal("")),
             backgroundImage: z.string().url(),
             srText: z.string(),
-        }).nullable(),
+        }).passthrough().nullable(),
         appStore: z.object({
             url: z.string().url().or(z.literal("")),
             backgroundImage: z.string().url(),
             srText: z.string(),
-        }).nullable(),
+        }).passthrough().nullable(),
         apk: z.object({
             backgroundImage: z.string().url(),
             line1: z.string(),
@@ -69,9 +89,9 @@ const SiteConfigSchema = z.object({
                 description: z.string(),
                 panUrl: z.string().url().or(z.literal("")),
                 officialUrl: z.string().url().or(z.literal("")),
-            }),
-        }).nullable(),
-    }),
+            }).passthrough(),
+        }).passthrough().nullable(),
+    }).passthrough(),
     video: z.object({
         id: z.string(),
         title: z.string(),
@@ -79,7 +99,7 @@ const SiteConfigSchema = z.object({
         playerTitle: z.string(),
         navLabel: z.string(),
         enabled: z.boolean(),
-    }),
+    }).passthrough(),
     footer: z.object({
         description: z.string(),
         copyright: z.string(),
@@ -88,10 +108,10 @@ const SiteConfigSchema = z.object({
             buttonText: z.string(),
             dialogTitle: z.string(),
             dialogDescription: z.string(),
-        }),
-    }),
+        }).passthrough(),
+    }).passthrough(),
     sections: z.array(SectionSchema),
-});
+}).passthrough();
 
 export type SiteConfig = z.infer<typeof SiteConfigSchema>;
 export type Article = z.infer<typeof ArticleSchema>;
@@ -117,6 +137,8 @@ const fetchDefaultConfig = async (): Promise<SiteConfig> => {
 };
 
 export const getSiteConfig = async (pkg?: string): Promise<SiteConfig> => {
+    const baseConfig = await fetchDefaultConfig();
+
     if (pkg) {
         const apiUrl = `https://api.us.apks.cc/game/site-config?pkg=${pkg}`;
         try {
@@ -125,7 +147,8 @@ export const getSiteConfig = async (pkg?: string): Promise<SiteConfig> => {
                 const data = await response.json();
                 const parsedData = SiteConfigSchema.safeParse(data);
                 if (parsedData.success) {
-                    return parsedData.data;
+                    // Deep merge the dynamic config over the default config
+                    return mergeDeep(baseConfig, parsedData.data);
                 } else {
                      console.error(`Failed to parse dynamic config for pkg: ${pkg}. Falling back to default.`, parsedData.error.toString());
                 }
@@ -138,7 +161,7 @@ export const getSiteConfig = async (pkg?: string): Promise<SiteConfig> => {
     }
     
     // Fallback to default if no pkg or if API fails
-    return fetchDefaultConfig();
+    return baseConfig;
 };
 
 
@@ -148,7 +171,11 @@ export const getArticleBySlug = async (slug: string, pkg?: string): Promise<Arti
     for (const section of config.sections) {
         const article = section.items.find((item) => item.slug === slug);
         if (article) {
-            return article;
+            return {
+              ...article,
+              // Ensure pkg is passed to article links if it exists
+              slug: pkg ? `/articles/${article.slug}?pkg=${pkg}` : `/articles/${article.slug}`
+            };
         }
     }
     

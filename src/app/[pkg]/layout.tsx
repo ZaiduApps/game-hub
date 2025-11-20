@@ -1,8 +1,5 @@
 
 import type { Metadata, ResolvingMetadata } from 'next';
-import { Suspense } from 'react';
-import './globals.css';
-import { Toaster } from "@/components/ui/toaster";
 import { getSiteConfig } from '@/config/site';
 
 export const dynamic = 'force-dynamic';
@@ -41,22 +38,6 @@ export async function generateMetadata({ params }: LayoutProps, parent: Resolvin
   return metadata;
 }
 
-export default async function RootLayout({ children, params }: LayoutProps) {
-  const siteConfig = await getSiteConfig(params.pkg);
-
-  return (
-    <html lang="zh-Hans" className="dark">
-      <head>
-        {siteConfig.analytics?.customHeadHtml && (
-          <div dangerouslySetInnerHTML={{ __html: siteConfig.analytics.customHeadHtml }} />
-        )}
-      </head>
-      <body className="font-body antialiased bg-background text-foreground">
-        <Suspense>
-          <main>{children}</main>
-        </Suspense>
-        <Toaster />
-      </body>
-    </html>
-  );
+export default function PkgLayout({ children }: LayoutProps) {
+  return <>{children}</>;
 }

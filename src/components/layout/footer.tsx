@@ -7,15 +7,18 @@ import { FeedbackDialog } from '@/components/FeedbackDialog';
 
 interface FooterProps {
   siteConfig: SiteConfig;
+  pkg?: string;
 }
 
-export function Footer({ siteConfig }: FooterProps) {
+export function Footer({ siteConfig, pkg }: FooterProps) {
+  const rootPath = pkg ? `/${pkg}` : '/';
+  
   return (
     <footer className="border-t border-border/40 py-8">
       <div className="px-4 md:px-6">
         <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
             <div className="flex flex-col items-center gap-4 md:items-start">
-            <Link href="/">
+            <Link href={rootPath}>
                 <PubgLogo siteConfig={siteConfig} />
             </Link>
             <p className="text-sm text-muted-foreground text-center md:text-left max-w-xs">
