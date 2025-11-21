@@ -17,7 +17,6 @@ interface HomePageContentProps {
 
 export function HomePageContent({ siteConfig, pkg }: HomePageContentProps) {
   const keywords = siteConfig.seo?.keywords || [];
-  const communitySection = siteConfig.sections?.find(s => s.id === 'community');
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -63,7 +62,7 @@ export function HomePageContent({ siteConfig, pkg }: HomePageContentProps) {
 
             return (
               <section key={section.id} id={section.id} className="container mx-auto px-4 md:px-6 scroll-mt-20">
-                {section.id === 'community' && communitySection?.enabled ? (
+                {section.id === 'community' ? (
                   <CommunitySquare />
                 ) : (
                   <>
@@ -153,5 +152,3 @@ export function HomePageContent({ siteConfig, pkg }: HomePageContentProps) {
     </div>
   );
 }
-
-
