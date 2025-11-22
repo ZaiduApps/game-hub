@@ -98,7 +98,7 @@ export default async function PkgLayout({ children, params }: LayoutProps) {
   return (
     <html lang="zh-Hans" className="dark" suppressHydrationWarning>
         <head />
-        <body className="font-body antialiased bg-background text-foreground">
+        <body className="font-body antialiased bg-background text-foreground" suppressHydrationWarning>
             <Suspense>
             <main>{children}</main>
             </Suspense>
