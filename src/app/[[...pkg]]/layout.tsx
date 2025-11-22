@@ -5,7 +5,6 @@ import { JSDOM } from 'jsdom';
 import Script from 'next/script';
 import { Toaster } from "@/components/ui/toaster"
 import { Suspense } from 'react';
-import { notFound } from 'next/navigation';
 import '../globals.css';
 
 export const dynamic = 'force-dynamic';
@@ -16,7 +15,7 @@ type LayoutProps = {
 };
 
 export async function generateMetadata({ params }: LayoutProps, parent: ResolvingMetadata): Promise<Metadata> {
-  const pkg = params.pkg?.[0] || 'com.tencent.ig';
+  const pkg = params.pkg?.[0];
   const siteConfig = await getSiteConfig(pkg);
   
   if (!siteConfig) {
@@ -79,15 +78,11 @@ export async function generateMetadata({ params }: LayoutProps, parent: Resolvin
 }
 
 export default async function PkgLayout({ children, params }: LayoutProps) {
-  const pkg = params.pkg?.[0] || 'com.tencent.ig';
+  const pkg = params.pkg?.[0];
   const siteConfig = await getSiteConfig(pkg);
   
-  if (!siteConfig) {
-      notFound();
-  }
-
   let baiduScript: { src?: string; innerHTML?: string } = {};
-  if (siteConfig.analytics?.customHeadHtml) {
+  if (siteConfig?.analytics?.customHeadHtml) {
     const dom = new JSDOM(`<!DOCTYPE html><html><head>${siteConfig.analytics.customHeadHtml}</head><body></body></html>`);
     const scriptTag = dom.window.document.head.querySelector('script');
     if (scriptTag) {
@@ -101,7 +96,7 @@ export default async function PkgLayout({ children, params }: LayoutProps) {
   }
   
   return (
-    <html lang="zh-Hans" className="dark">
+    <html lang="zh-Hans" className="dark" suppressHydrationWarning>
         <head />
         <body className="font-body antialiased bg-background text-foreground">
             <Suspense>
