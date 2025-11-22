@@ -70,7 +70,7 @@ export default function RootLayout({
   return (
     <html lang="zh-Hans" className="dark" suppressHydrationWarning>
       <head />
-      <body>
+      <body suppressHydrationWarning>
         {children}
         <Toaster />
       </body>
