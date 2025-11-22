@@ -1,31 +1,6 @@
 
 import { z } from 'zod';
-import fs from 'fs/promises';
-import path from 'path';
-
-// Helper function for deep merging configurations
-function mergeDeep(target: any, source: any) {
-    const output = { ...target };
-    if (isObject(target) && isObject(source)) {
-        Object.keys(source).forEach(key => {
-            if (isObject(source[key])) {
-                if (!(key in target)) {
-                    Object.assign(output, { [key]: source[key] });
-                } else {
-                    output[key] = mergeDeep(target[key], source[key]);
-                }
-            } else {
-                Object.assign(output, { [key]: source[key] });
-            }
-        });
-    }
-    return output;
-}
-
-function isObject(item: any) {
-    return (item && typeof item === 'object' && !Array.isArray(item));
-}
-
+import { notFound } from 'next/navigation';
 
 const ArticleSchema = z.object({
     slug: z.string(),
@@ -65,23 +40,23 @@ const SiteConfigSchema = z.object({
         }),
     }).passthrough(),
     hero: z.object({
-        backgroundImage: z.string().url(),
+        backgroundImage: z.string().url().or(z.literal("")),
         title: z.string(),
         description: z.string(),
     }).passthrough(),
     downloads: z.object({
         googlePlay: z.object({
             url: z.string().url().or(z.literal("")),
-            backgroundImage: z.string().url(),
+            backgroundImage: z.string().url().or(z.literal("")),
             srText: z.string(),
         }).passthrough().nullable(),
         appStore: z.object({
             url: z.string().url().or(z.literal("")),
-            backgroundImage: z.string().url(),
+            backgroundImage: z.string().url().or(z.literal("")),
             srText: z.string(),
         }).passthrough().nullable(),
         apk: z.object({
-            backgroundImage: z.string().url(),
+            backgroundImage: z.string().url().or(z.literal("")),
             line1: z.string(),
             line2: z.string(),
             dialog: z.object({
@@ -118,64 +93,40 @@ export type Article = z.infer<typeof ArticleSchema>;
 export type Section = z.infer<typeof SectionSchema>;
 export type Update = Article;
 
-let defaultConfig: SiteConfig | null = null;
-const fetchDefaultConfig = async (): Promise<SiteConfig> => {
-    if (defaultConfig) {
-        return defaultConfig;
-    }
+
+export const getSiteConfig = async (pkg: string): Promise<SiteConfig | null> => {
+    const apiUrl = `https://api.us.apks.cc/game/site-config?pkg=${pkg}`;
     try {
-        const filePath = path.join(process.cwd(), 'public', 'default-site-config.json');
-        const fileContents = await fs.readFile(filePath, 'utf8');
-        const data = JSON.parse(fileContents);
-        const parsed = SiteConfigSchema.parse(data);
-        defaultConfig = parsed;
-        return parsed;
-    } catch (error) {
-        console.error("CRITICAL: Failed to read or parse default site configuration.", error);
-        throw new Error("Could not load the default site configuration.");
-    }
-};
-
-export const getSiteConfig = async (pkg?: string): Promise<SiteConfig> => {
-    const baseConfig = await fetchDefaultConfig();
-
-    if (pkg) {
-        const apiUrl = `https://api.us.apks.cc/game/site-config?pkg=${pkg}`;
-        try {
-            const response = await fetch(apiUrl, { cache: 'no-store' });
-            if (response.ok) {
-                const data = await response.json();
-                const parsedData = SiteConfigSchema.safeParse(data);
-                if (parsedData.success) {
-                    // Deep merge the dynamic config over the default config
-                    return mergeDeep(baseConfig, parsedData.data);
-                } else {
-                     console.error(`Failed to parse dynamic config for pkg: ${pkg}. Falling back to default.`, parsedData.error.toString());
-                }
+        const response = await fetch(apiUrl, { cache: 'no-store' });
+        if (response.ok) {
+            const data = await response.json();
+            const parsedData = SiteConfigSchema.safeParse(data);
+            if (parsedData.success) {
+                return parsedData.data;
             } else {
-                console.error(`API request failed with status ${response.status} for pkg: ${pkg}. Falling back to default.`);
+                 console.error(`Failed to parse dynamic config for pkg: ${pkg}.`, parsedData.error.toString());
+                 return null;
             }
-        } catch (error) {
-            console.error(`Error fetching or parsing site config for pkg: ${pkg}. Falling back to default:`, error);
+        } else {
+            console.error(`API request failed with status ${response.status} for pkg: ${pkg}.`);
+            return null;
         }
+    } catch (error) {
+        console.error(`Error fetching or parsing site config for pkg: ${pkg}.`, error);
+        return null;
     }
-    
-    // Fallback to default if no pkg or if API fails
-    return baseConfig;
 };
 
-
-export const getArticleBySlug = async (slug: string, pkg?: string): Promise<Article | null> => {
+export const getArticleBySlug = async (slug: string, pkg: string): Promise<Article | null> => {
     const config = await getSiteConfig(pkg);
+    if (!config) {
+        return null;
+    }
     
     for (const section of config.sections) {
         const article = section.items.find((item) => item.slug === slug);
         if (article) {
-            return {
-              ...article,
-              // Ensure pkg is passed to article links if it exists
-              slug: pkg ? `/articles/${article.slug}?pkg=${pkg}` : `/articles/${article.slug}`
-            };
+            return article;
         }
     }
     

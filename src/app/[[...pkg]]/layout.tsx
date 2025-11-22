@@ -1,22 +1,31 @@
 
 import type { Metadata, ResolvingMetadata } from 'next';
-import { Suspense } from 'react';
-import './globals.css';
-import { Toaster } from "@/components/ui/toaster";
 import { getSiteConfig } from '@/config/site';
-import Script from 'next/script';
 import { JSDOM } from 'jsdom';
+import Script from 'next/script';
+import { Toaster } from "@/components/ui/toaster"
+import { Suspense } from 'react';
+import { notFound } from 'next/navigation';
+import '../globals.css';
 
 export const dynamic = 'force-dynamic';
 
 type LayoutProps = {
   children: React.ReactNode;
-  params: { pkg?: string };
+  params: { pkg?: string[] };
 };
 
 export async function generateMetadata({ params }: LayoutProps, parent: ResolvingMetadata): Promise<Metadata> {
-  const siteConfig = await getSiteConfig(params.pkg);
+  const pkg = params.pkg?.[0] || 'com.tencent.ig';
+  const siteConfig = await getSiteConfig(pkg);
   
+  if (!siteConfig) {
+    return {
+      title: 'Site Not Found',
+      description: 'The requested site configuration could not be loaded.',
+    }
+  }
+
   const previousImages = (await parent).openGraph?.images || [];
 
   const metadata: Metadata = {
@@ -42,7 +51,6 @@ export async function generateMetadata({ params }: LayoutProps, parent: Resolvin
     other: {}
   };
 
-  // Parse customHeadHtml for meta tags
   if (siteConfig.analytics?.customHeadHtml) {
     const dom = new JSDOM(`<!DOCTYPE html><html><head>${siteConfig.analytics.customHeadHtml}</head><body></body></html>`);
     const metaTags = dom.window.document.head.querySelectorAll('meta');
@@ -70,10 +78,14 @@ export async function generateMetadata({ params }: LayoutProps, parent: Resolvin
   return metadata;
 }
 
-export default async function RootLayout({ children, params }: LayoutProps) {
-  const siteConfig = await getSiteConfig(params.pkg);
+export default async function PkgLayout({ children, params }: LayoutProps) {
+  const pkg = params.pkg?.[0] || 'com.tencent.ig';
+  const siteConfig = await getSiteConfig(pkg);
+  
+  if (!siteConfig) {
+      notFound();
+  }
 
-  // Extract script from customHeadHtml
   let baiduScript: { src?: string; innerHTML?: string } = {};
   if (siteConfig.analytics?.customHeadHtml) {
     const dom = new JSDOM(`<!DOCTYPE html><html><head>${siteConfig.analytics.customHeadHtml}</head><body></body></html>`);
@@ -87,25 +99,24 @@ export default async function RootLayout({ children, params }: LayoutProps) {
         }
     }
   }
-
+  
   return (
     <html lang="zh-Hans" className="dark">
-      <head />
-      <body className="font-body antialiased bg-background text-foreground">
-        <Suspense>
-          <main>{children}</main>
-        </Suspense>
-        <Toaster />
-        {baiduScript.src && (
-            <Script src={baiduScript.src} strategy="afterInteractive" />
-        )}
-        {baiduScript.innerHTML && (
-            <Script id="baidu-analytics-inline" strategy="afterInteractive">
-                {baiduScript.innerHTML}
-            </Script>
-        )}
-      </body>
+        <head />
+        <body className="font-body antialiased bg-background text-foreground">
+            <Suspense>
+            <main>{children}</main>
+            </Suspense>
+            <Toaster />
+            {baiduScript.src && (
+                <Script src={baiduScript.src} strategy="afterInteractive" />
+            )}
+            {baiduScript.innerHTML && (
+                <Script id="baidu-analytics-inline" strategy="afterInteractive">
+                    {baiduScript.innerHTML}
+                </Script>
+            )}
+        </body>
     </html>
   );
 }
-

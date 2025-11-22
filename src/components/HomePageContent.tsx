@@ -23,7 +23,7 @@ export function HomePageContent({ siteConfig, pkg }: HomePageContentProps) {
       <Header siteConfig={siteConfig} pkg={pkg} />
       <main className="flex-grow">
         <div className="flex flex-col gap-12 md:gap-16 pb-16">
-          {/* Hero Section */}
+          {siteConfig.hero.backgroundImage && (
           <section id="home" className="relative w-full aspect-video flex items-center justify-center text-center text-white">
             <Image
               src={siteConfig.hero.backgroundImage}
@@ -49,22 +49,29 @@ export function HomePageContent({ siteConfig, pkg }: HomePageContentProps) {
               </div>
             </div>
           </section>
+          )}
 
           {siteConfig.sections.map((section) => {
             if (section.enabled === false) {
               return null;
             }
-            if (section.id !== 'community' && (!section.items || section.items.length === 0)) {
-                return null;
+            
+            const articlePath = pkg ? `/${pkg}/articles` : '/articles';
+
+            if (section.id === 'community') {
+              return (
+                <section key={section.id} id={section.id} className="container mx-auto px-4 md:px-6 scroll-mt-20">
+                  <CommunitySquare />
+                </section>
+              );
             }
 
-            const articlePath = pkg ? `/${pkg}/articles` : '/articles';
+            if (!section.items || section.items.length === 0) {
+              return null;
+            }
 
             return (
               <section key={section.id} id={section.id} className="container mx-auto px-4 md:px-6 scroll-mt-20">
-                {section.id === 'community' ? (
-                  <CommunitySquare />
-                ) : (
                   <>
                     <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-8">{section.title}</h2>
                     {section.id === 'articles' ? (
@@ -122,7 +129,6 @@ export function HomePageContent({ siteConfig, pkg }: HomePageContentProps) {
                       </div>
                     ) : null}
                   </>
-                )}
               </section>
             )
           })}
