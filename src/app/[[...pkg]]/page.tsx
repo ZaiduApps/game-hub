@@ -28,7 +28,8 @@ export default async function PkgPage({ params }: PkgPageProps) {
             const encodedSiteName = encodeURIComponent(siteConfig.name);
             redirect(`/${encodedSiteName}/${pkgName}`);
         } else {
-            notFound();
+            // If the package is not found, redirect to the root, which will then handle the default redirect.
+            redirect('/');
         }
     } else if (pkgSegments.length >= 2) {
         siteName = decodeURIComponent(pkgSegments[0]);
@@ -42,7 +43,8 @@ export default async function PkgPage({ params }: PkgPageProps) {
     const siteConfig = await getSiteConfig(pkgName);
 
     if (!siteConfig || (siteName && siteName !== siteConfig.name)) {
-        notFound();
+        // If the package is not found from a full URL, redirect to the root.
+        redirect('/');
     }
     
     const isArticlePage = pkgSegments.length > 2 && pkgSegments[2] === 'articles';
