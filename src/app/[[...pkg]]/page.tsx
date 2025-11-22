@@ -16,16 +16,21 @@ interface PkgPageProps {
 }
 
 export default async function PkgPage({ params }: PkgPageProps) {
-    const pkgSegments = params.pkg || ['com.tencent.ig'];
-    const pkgName = pkgSegments[0];
+    const pkgSegments = params.pkg || [];
+    const pkgName = pkgSegments[0] || 'com.tencent.ig';
     const isArticlePage = pkgSegments.length > 2 && pkgSegments[1] === 'articles';
+    
+    const siteConfig = await getSiteConfig(pkgName);
+
+    if (!siteConfig) {
+        notFound();
+    }
     
     if (isArticlePage) {
         const slug = pkgSegments[2];
         const article = await getArticleBySlug(slug, pkgName);
-        const siteConfig = await getSiteConfig(pkgName);
 
-        if (!article || !siteConfig) {
+        if (!article) {
             notFound();
         }
 
@@ -35,16 +40,18 @@ export default async function PkgPage({ params }: PkgPageProps) {
                 <article className="container mx-auto px-4 md:px-6 py-8 md:py-12">
                 <div className="max-w-4xl mx-auto">
                     <header className="mb-8">
-                    <div className="relative w-full aspect-video rounded-lg overflow-hidden mb-6">
-                        <Image
-                        src={article.imageUrl}
-                        alt={article.title}
-                        fill
-                        className="object-cover"
-                        priority
-                        unoptimized
-                        />
-                    </div>
+                    {article.imageUrl && (
+                        <div className="relative w-full aspect-video rounded-lg overflow-hidden mb-6">
+                            <Image
+                                src={article.imageUrl}
+                                alt={article.title}
+                                fill
+                                className="object-cover"
+                                priority
+                                unoptimized
+                            />
+                        </div>
+                    )}
                     <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tighter leading-tight mb-3">
                         {article.title}
                     </h1>
@@ -67,9 +74,5 @@ export default async function PkgPage({ params }: PkgPageProps) {
     }
 
     // Default to homepage
-    const siteConfig = await getSiteConfig(pkgName);
-    if (!siteConfig) {
-        notFound();
-    }
     return <HomePageContent siteConfig={siteConfig} pkg={pkgName} />;
 }

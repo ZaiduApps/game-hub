@@ -79,16 +79,18 @@ export function HomePageContent({ siteConfig, pkg }: HomePageContentProps) {
                         {section.items.map((article) => (
                           <Card key={article.slug} className="group overflow-hidden flex flex-col h-full hover:shadow-lg transition-shadow duration-300">
                             <Link href={`${articlePath}/${article.slug}`} className="flex flex-col h-full">
-                              <div className="relative w-full aspect-[1312/600] overflow-hidden">
-                                <Image
-                                  src={article.imageUrl}
-                                  alt={article.title}
-                                  data-ai-hint={article.imageHint}
-                                  fill
-                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                  unoptimized
-                                />
-                              </div>
+                              {article.imageUrl && (
+                                <div className="relative w-full aspect-[1312/600] overflow-hidden">
+                                  <Image
+                                    src={article.imageUrl}
+                                    alt={article.title}
+                                    data-ai-hint={article.imageHint}
+                                    fill
+                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                    unoptimized
+                                  />
+                                </div>
+                              )}
                               <CardContent className="p-4 flex flex-col flex-grow">
                                 <CardTitle className="text-base md:text-lg font-bold line-clamp-2 group-hover:text-primary transition-colors">{article.title}</CardTitle>
                                 <CardDescription className="text-xs mt-1">{new Date(article.date).toLocaleDateString()} {article.author && `by ${article.author}`}</CardDescription>
@@ -108,16 +110,18 @@ export function HomePageContent({ siteConfig, pkg }: HomePageContentProps) {
                         {section.items.slice(0, 4).map((item) => (
                           <Link key={item.slug} href={`${articlePath}/${item.slug}`} className="group">
                             <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300 flex flex-col md:flex-row">
-                              <div className="relative w-full md:w-1/3 aspect-[1312/600] overflow-hidden shrink-0">
-                                <Image
-                                  src={item.imageUrl}
-                                  alt={item.title}
-                                  data-ai-hint={item.imageHint}
-                                  fill
-                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                  unoptimized
-                                />
-                              </div>
+                              {item.imageUrl && (
+                                <div className="relative w-full md:w-1/3 aspect-[1312/600] overflow-hidden shrink-0">
+                                  <Image
+                                    src={item.imageUrl}
+                                    alt={item.title}
+                                    data-ai-hint={item.imageHint}
+                                    fill
+                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                    unoptimized
+                                  />
+                                </div>
+                              )}
                               <CardContent className="p-6 flex flex-col justify-center">
                                 <CardTitle className="text-xl md:text-2xl font-bold group-hover:text-primary transition-colors">{item.title} {item.version && `- v${item.version}`}</CardTitle>
                                 <CardDescription className="text-sm mt-2">{new Date(item.date).toLocaleDateString()}</CardDescription>
