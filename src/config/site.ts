@@ -94,54 +94,9 @@ export type Article = z.infer<typeof ArticleSchema>;
 export type Section = z.infer<typeof SectionSchema>;
 export type Update = Article;
 
-const isObject = (item: any): item is object => {
-    return (item && typeof item === 'object' && !Array.isArray(item));
-};
-
-const deepMerge = (target: any, source: any): any => {
-    const output = { ...target };
-
-    if (isObject(target) && isObject(source)) {
-        Object.keys(source).forEach(key => {
-            if (isObject(source[key])) {
-                if (!(key in target)) {
-                    Object.assign(output, { [key]: source[key] });
-                } else {
-                    output[key] = deepMerge(target[key], source[key]);
-                }
-            } else if (source[key] !== undefined) { 
-                Object.assign(output, { [key]: source[key] });
-            }
-        });
-    }
-
-    return output;
-};
-
-
-const fetchDefaultConfig = async (): Promise<SiteConfig | null> => {
-    try {
-        const filePath = path.join(process.cwd(), 'public', 'default-site-config.json');
-        const fileContents = await fs.readFile(filePath, 'utf8');
-        const data = JSON.parse(fileContents);
-        const parsedData = SiteConfigSchema.safeParse(data);
-        if (parsedData.success) {
-            return parsedData.data;
-        } else {
-            console.error("Failed to parse default config.", parsedData.error.toString());
-            return null;
-        }
-    } catch (error) {
-        console.error("Error fetching or parsing default site config.", error);
-        return null;
-    }
-};
-
 export const getSiteConfig = async (pkg?: string): Promise<SiteConfig | null> => {
-    const defaultConfig = await fetchDefaultConfig();
-
     if (!pkg) {
-        return defaultConfig;
+        return null;
     }
 
     try {
@@ -152,21 +107,18 @@ export const getSiteConfig = async (pkg?: string): Promise<SiteConfig | null> =>
             const data = await response.json();
             const parsedData = SiteConfigSchema.safeParse(data);
             if (parsedData.success) {
-                if (defaultConfig) {
-                    return deepMerge(defaultConfig, parsedData.data);
-                }
                 return parsedData.data;
             } else {
                 console.error(`Failed to parse dynamic config for pkg: ${pkg}.`, parsedData.error.toString());
                 return null;
             }
         } else {
-            console.error(`API request failed with status ${response.status} for pkg: ${pkg}. Falling back to default.`);
-            return defaultConfig;
+            console.error(`API request failed with status ${response.status} for pkg: ${pkg}.`);
+            return null;
         }
     } catch (error) {
-        console.error(`Error fetching dynamic config for pkg: ${pkg}. Falling back to default.`, error);
-        return defaultConfig;
+        console.error(`Error fetching dynamic config for pkg: ${pkg}.`, error);
+        return null;
     }
 };
 
