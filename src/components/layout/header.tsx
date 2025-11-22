@@ -42,6 +42,11 @@ export function Header({ siteConfig, pkg }: HeaderProps) {
     ...(siteConfig.video.enabled ? [{ href: `#${siteConfig.video.id}`, label: siteConfig.video.navLabel, sectionId: siteConfig.video.id }] : []),
   ];
 
+  const getRootPath = () => {
+    if (!pkg) return '/';
+    return `/${encodeURIComponent(siteConfig.name)}/${pkg}`;
+  }
+
   useEffect(() => {
     if (pathname.includes('/articles/')) {
         setActiveSection('');
@@ -79,19 +84,16 @@ export function Header({ siteConfig, pkg }: HeaderProps) {
     e.preventDefault();
     const targetId = href.substring(1);
     
-    const rootPath = pkg ? `/${pkg}` : '/';
+    const rootPath = getRootPath();
 
-    // If we're on a different page, navigate to the homepage with the hash
-    if (!pathname.startsWith(rootPath) || pathname.includes('/articles')) {
+    if (pathname.includes('/articles')) {
         window.location.href = `${rootPath}${href}`;
         return;
     }
 
-    // If we're already on the homepage, scroll to the section
     const targetElement = document.getElementById(targetId);
     if (targetElement) {
-        // Adjust scroll position to account for sticky header
-        const headerOffset = 80; // height of header + some margin
+        const headerOffset = 80; 
         const elementPosition = targetElement.getBoundingClientRect().top;
         const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
       
@@ -100,15 +102,10 @@ export function Header({ siteConfig, pkg }: HeaderProps) {
           behavior: "smooth"
         });
 
-        // Manually set active section for instant feedback on click
         setActiveSection(targetId);
     }
-    setIsSheetOpen(false); // Close sheet on link click
+    setIsSheetOpen(false);
   };
-  
-  const getRootPath = () => {
-    return pkg ? `/${pkg}` : '/';
-  }
 
   return (
     <>

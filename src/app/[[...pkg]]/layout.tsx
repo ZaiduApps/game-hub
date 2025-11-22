@@ -15,8 +15,16 @@ type LayoutProps = {
 };
 
 export async function generateMetadata({ params }: LayoutProps, parent: ResolvingMetadata): Promise<Metadata> {
-  const pkg = params.pkg?.[0];
-  const siteConfig = await getSiteConfig(pkg);
+  const pkgSegments = params.pkg || [];
+  let pkgName: string | undefined;
+
+  if (pkgSegments.length === 1) {
+    pkgName = pkgSegments[0];
+  } else if (pkgSegments.length >= 2) {
+    pkgName = pkgSegments[1];
+  }
+
+  const siteConfig = await getSiteConfig(pkgName);
   
   if (!siteConfig) {
     return {
@@ -78,8 +86,16 @@ export async function generateMetadata({ params }: LayoutProps, parent: Resolvin
 }
 
 export default async function PkgLayout({ children, params }: LayoutProps) {
-  const pkg = params.pkg?.[0];
-  const siteConfig = await getSiteConfig(pkg);
+  const pkgSegments = params.pkg || [];
+  let pkgName: string | undefined;
+
+  if (pkgSegments.length === 1) {
+    pkgName = pkgSegments[0];
+  } else if (pkgSegments.length >= 2) {
+    pkgName = pkgSegments[1];
+  }
+
+  const siteConfig = await getSiteConfig(pkgName);
   
   let baiduScript: { src?: string; innerHTML?: string } = {};
   if (siteConfig?.analytics?.customHeadHtml) {

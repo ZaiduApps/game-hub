@@ -1,7 +1,7 @@
 
 import { getSiteConfig, getArticleBySlug } from '@/config/site';
 import { HomePageContent } from '@/components/HomePageContent';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import Image from 'next/image';
 import { MarkdownContent } from '@/components/MarkdownContent';
 import { ContextualInfo } from '@/components/ContextualInfo';
@@ -17,17 +17,40 @@ interface PkgPageProps {
 
 export default async function PkgPage({ params }: PkgPageProps) {
     const pkgSegments = params.pkg || [];
-    const pkgName = pkgSegments[0] || 'com.tencent.ig';
-    const isArticlePage = pkgSegments.length > 2 && pkgSegments[1] === 'articles';
-    
-    const siteConfig = await getSiteConfig(pkgName);
+    let pkgName: string;
+    let siteName: string | undefined;
 
-    if (!siteConfig) {
+    if (pkgSegments.length === 1) {
+        pkgName = pkgSegments[0];
+        const siteConfig = await getSiteConfig(pkgName);
+        if (siteConfig) {
+            // Redirect to the canonical URL with the site name
+            const encodedSiteName = encodeURIComponent(siteConfig.name);
+            redirect(`/${encodedSiteName}/${pkgName}`);
+        } else {
+            notFound();
+        }
+    } else if (pkgSegments.length >= 2) {
+        siteName = decodeURIComponent(pkgSegments[0]);
+        pkgName = pkgSegments[1];
+    } else {
+        // This case handles the root URL, which should have been redirected by middleware.
+        // If it ever gets here, it's a fallback.
         notFound();
     }
     
+    const siteConfig = await getSiteConfig(pkgName);
+
+    if (!siteConfig || (siteName && siteName !== siteConfig.name)) {
+        notFound();
+    }
+    
+    const isArticlePage = pkgSegments.length > 2 && pkgSegments[2] === 'articles';
     if (isArticlePage) {
-        const slug = pkgSegments[2];
+        const slug = pkgSegments[3];
+        if (!slug) {
+            notFound();
+        }
         const article = await getArticleBySlug(slug, pkgName);
 
         if (!article) {

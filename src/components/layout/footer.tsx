@@ -11,7 +11,7 @@ interface FooterProps {
 }
 
 export function Footer({ siteConfig, pkg }: FooterProps) {
-  const rootPath = pkg ? `/${pkg}` : '/';
+  const rootPath = pkg ? `/${encodeURIComponent(siteConfig.name)}/${pkg}` : '/';
   
   return (
     <footer className="border-t border-border/40 py-8">

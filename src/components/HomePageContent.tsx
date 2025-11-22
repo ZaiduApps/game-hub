@@ -17,6 +17,7 @@ interface HomePageContentProps {
 
 export function HomePageContent({ siteConfig, pkg }: HomePageContentProps) {
   const keywords = siteConfig.seo?.keywords || [];
+  const encodedSiteName = encodeURIComponent(siteConfig.name);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -56,7 +57,7 @@ export function HomePageContent({ siteConfig, pkg }: HomePageContentProps) {
               return null;
             }
             
-            const articlePath = pkg ? `/${pkg}/articles` : '/articles';
+            const articlePath = pkg ? `/${encodedSiteName}/${pkg}/articles` : '/articles';
 
             if (section.id === 'community') {
               return (

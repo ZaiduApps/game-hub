@@ -10,18 +10,19 @@ import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 
 type Props = {
-  params: { slug: string; pkg?: string };
+  params: { slug: string; pkg?: string[] };
 }
 
 export async function generateMetadata({ params }: Props, parent: ResolvingMetadata): Promise<Metadata> {
-  const article = await getArticleBySlug(params.slug, params.pkg);
-  const siteConfig = await getSiteConfig(params.pkg);
+  const pkgName = params.pkg?.[1];
+  const article = await getArticleBySlug(params.slug, pkgName);
+  const siteConfig = await getSiteConfig(pkgName);
   
   const previousImages = (await parent).openGraph?.images || [];
 
-  if (!article) {
+  if (!article || !siteConfig) {
     return {
-      title: `文章未找到 - ${siteConfig.name}`,
+      title: `文章未找到 - ${siteConfig?.name || ''}`,
     };
   }
 
@@ -31,35 +32,38 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
     openGraph: {
       title: article.title,
       description: article.summary,
-      images: [article.imageUrl, ...previousImages],
+      images: article.imageUrl ? [article.imageUrl, ...previousImages] : previousImages,
     },
   };
 }
 
 export default async function ArticlePage({ params }: Props) {
-  const article = await getArticleBySlug(params.slug, params.pkg);
-  const siteConfig = await getSiteConfig(params.pkg);
+  const pkgName = params.pkg?.[1];
+  const article = await getArticleBySlug(params.slug, pkgName);
+  const siteConfig = await getSiteConfig(pkgName);
 
-  if (!article) {
+  if (!article || !siteConfig) {
     notFound();
   }
 
   return (
     <>
-    <Header siteConfig={siteConfig} />
+    <Header siteConfig={siteConfig} pkg={pkgName}/>
     <article className="container mx-auto px-4 md:px-6 py-8 md:py-12">
       <div className="max-w-4xl mx-auto">
         <header className="mb-8">
-          <div className="relative w-full aspect-video rounded-lg overflow-hidden mb-6">
-            <Image
-              src={article.imageUrl}
-              alt={article.title}
-              fill
-              className="object-cover"
-              priority
-              unoptimized
-            />
-          </div>
+          {article.imageUrl && 
+            <div className="relative w-full aspect-video rounded-lg overflow-hidden mb-6">
+              <Image
+                src={article.imageUrl}
+                alt={article.title}
+                fill
+                className="object-cover"
+                priority
+                unoptimized
+              />
+            </div>
+          }
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tighter leading-tight mb-3">
             {article.title}
           </h1>
@@ -75,8 +79,7 @@ export default async function ArticlePage({ params }: Props) {
         <CommentSection />
       </div>
     </article>
-    <Footer siteConfig={siteConfig} />
+    <Footer siteConfig={siteConfig} pkg={pkgName} />
     </>
   );
 }
-
