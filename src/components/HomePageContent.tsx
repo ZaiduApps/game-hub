@@ -7,8 +7,6 @@ import { GameDownloadButtons } from '@/components/GameDownloadButtons';
 import { ArrowRight } from 'lucide-react';
 import { CommunitySquare } from '@/components/CommunitySquare';
 import { SiteConfig } from '@/config/site';
-import { Header } from '@/components/layout/header';
-import { Footer } from '@/components/layout/footer';
 
 interface HomePageContentProps {
   siteConfig: SiteConfig;
@@ -21,7 +19,6 @@ export function HomePageContent({ siteConfig, pkg }: HomePageContentProps) {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Header siteConfig={siteConfig} pkg={pkg} />
       <main className="flex-grow">
         <div className="flex flex-col gap-12 md:gap-16 pb-16">
           {siteConfig.hero.backgroundImage && (
@@ -159,7 +156,6 @@ export function HomePageContent({ siteConfig, pkg }: HomePageContentProps) {
           </div>
         </div>
       </main>
-      <Footer siteConfig={siteConfig} pkg={pkg} />
     </div>
   );
 }

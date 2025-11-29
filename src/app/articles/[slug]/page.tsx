@@ -6,15 +6,14 @@ import { MarkdownContent } from '@/components/MarkdownContent';
 import { ContextualInfo } from '@/components/ContextualInfo';
 import { CommentSection } from '@/components/CommentSection';
 import type { Metadata, ResolvingMetadata } from 'next';
-import { Header } from '@/components/layout/header';
-import { Footer } from '@/components/layout/footer';
 
 type Props = {
   params: { slug: string; pkg?: string[] };
 }
 
 export async function generateMetadata({ params }: Props, parent: ResolvingMetadata): Promise<Metadata> {
-  const pkgName = params.pkg?.[1];
+  const awaitedParams = await params;
+  const pkgName = awaitedParams.pkg?.[1];
   const article = await getArticleBySlug(params.slug, pkgName);
   const siteConfig = await getSiteConfig(pkgName);
   
@@ -32,23 +31,21 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
     openGraph: {
       title: article.title,
       description: article.summary,
-      images: article.imageUrl ? [article.imageUrl, ...previousImages] : previousImages,
+      images: article.imageUrl ? [article.imageUrl, ...previousImages] : [],
     },
   };
 }
 
 export default async function ArticlePage({ params }: Props) {
-  const pkgName = params.pkg?.[1];
+  const awaitedParams = await params;
+  const pkgName = awaitedParams.pkg?.[1];
   const article = await getArticleBySlug(params.slug, pkgName);
-  const siteConfig = await getSiteConfig(pkgName);
-
-  if (!article || !siteConfig) {
+  
+  if (!article) {
     notFound();
   }
 
   return (
-    <>
-    <Header siteConfig={siteConfig} pkg={pkgName}/>
     <article className="container mx-auto px-4 md:px-6 py-8 md:py-12">
       <div className="max-w-4xl mx-auto">
         <header className="mb-8">
@@ -79,7 +76,5 @@ export default async function ArticlePage({ params }: Props) {
         <CommentSection />
       </div>
     </article>
-    <Footer siteConfig={siteConfig} pkg={pkgName} />
-    </>
   );
 }
