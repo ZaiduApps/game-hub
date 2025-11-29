@@ -4,14 +4,9 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { MessageCircleQuestion } from 'lucide-react';
-import { FeedbackDialog } from './FeedbackDialog';
-import { SiteConfig } from '@/config/site';
+import { HelpDialog } from './HelpDialog';
 
-interface FloatingHelpButtonProps {
-  siteConfig: SiteConfig;
-}
-
-export function FloatingHelpButton({ siteConfig }: FloatingHelpButtonProps) {
+export function FloatingHelpButton() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   return (
@@ -25,7 +20,7 @@ export function FloatingHelpButton({ siteConfig }: FloatingHelpButtonProps) {
             <span className="text-xs -mt-1">需要帮助</span>
         </div>
       </Button>
-      <FeedbackDialog siteConfig={siteConfig} open={isDialogOpen} onOpenChange={setIsDialogOpen} isTriggeredByFab={true} />
+      <HelpDialog open={isDialogOpen} onOpenChange={setIsDialogOpen} />
     </>
   );
 }
