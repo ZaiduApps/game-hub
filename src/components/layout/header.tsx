@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { PubgLogo } from '@/components/icons/PubgLogo';
 import { Button } from '@/components/ui/button';
-import { Gamepad2, Menu, MessageSquare, Newspaper, Rss, Video } from 'lucide-react';
+import { Gamepad2, Menu, MessageSquare, Newspaper, Rss, Video, ShoppingCart } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
 import { ApkDownloadDialog } from '../ApkDownloadDialog';
@@ -120,14 +120,14 @@ export function Header({ siteConfig, pkg }: HeaderProps) {
                         <span className="sr-only">打开菜单</span>
                       </Button>
                     </SheetTrigger>
-                    <SheetContent side="left">
+                    <SheetContent side="left" className="flex flex-col">
                       <SheetHeader>
                         <SheetTitle className="sr-only">主菜单</SheetTitle>
                         <Link href={getRootPath()} className="flex items-center space-x-2">
                           <PubgLogo siteConfig={siteConfig} />
                         </Link>
                       </SheetHeader>
-                      <nav className="flex flex-col space-y-4 mt-6">
+                      <nav className="flex flex-col space-y-4 mt-6 flex-grow">
                         {navLinks.map(({ href, label, sectionId }) => {
                           const Icon = navIcons[sectionId];
                           return (
@@ -146,6 +146,14 @@ export function Header({ siteConfig, pkg }: HeaderProps) {
                           )
                         })}
                       </nav>
+                      <div className="flex flex-col space-y-2 pt-4 border-t border-border/40">
+                         <Button onClick={() => { setIsSheetOpen(false); setIsApkDialogOpen(true); }}>
+                           游戏下载
+                         </Button>
+                         <Button variant="secondary" asChild>
+                            <a href={`https://www.gamerbusy.com/lol-account`} target="_blank" rel="noopener noreferrer">账号购买</a>
+                         </Button>
+                       </div>
                     </SheetContent>
                   </Sheet>
                 </div>
@@ -171,9 +179,12 @@ export function Header({ siteConfig, pkg }: HeaderProps) {
               </nav>
           </div>
 
-          <div className="hidden md:flex items-center">
+          <div className="hidden md:flex items-center gap-2">
             <Button onClick={() => setIsApkDialogOpen(true)} className="animated-border-btn">
               游戏下载
+            </Button>
+            <Button variant="secondary" asChild>
+               <a href={`https://www.gamerbusy.com/lol-account`} target="_blank" rel="noopener noreferrer">账号购买</a>
             </Button>
           </div>
         </div>
