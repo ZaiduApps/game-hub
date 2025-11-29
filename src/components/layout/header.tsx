@@ -151,7 +151,7 @@ export function Header({ siteConfig, pkg }: HeaderProps) {
                            游戏下载
                          </Button>
                          <Button variant="secondary" asChild>
-                            <a href={`https://www.gamerbusy.com/lol-account`} target="_blank" rel="noopener noreferrer">账号购买</a>
+                            <a href={`https://apks.pgid.club/`} target="_blank" rel="noopener noreferrer">🔥🔥谷歌账号购买</a>
                          </Button>
                        </div>
                     </SheetContent>
@@ -183,8 +183,8 @@ export function Header({ siteConfig, pkg }: HeaderProps) {
             <Button onClick={() => setIsApkDialogOpen(true)} className="animated-border-btn">
               游戏下载
             </Button>
-            <Button variant="secondary" asChild>
-               <a href={`https://www.gamerbusy.com/lol-account`} target="_blank" rel="noopener noreferrer">账号购买</a>
+            <Button variant="secondary" asChild className="animated-border-btn">
+            <a href={`https://apks.pgid.club/`} target="_blank" rel="noopener noreferrer">🔥🔥谷歌账号购买</a>
             </Button>
           </div>
         </div>

@@ -19,18 +19,18 @@ interface HelpDialogProps {
 
 const helpLinks = [
   {
-    text: '如何下载游戏？',
-    href: '#download',
+    text: '无法登录游玩？',
+    href: 'https://m.tb.cn/h.SywCvXI?tk=jXg2fL5IjQD',
     icon: Download,
   },
   {
-    text: '常见问题解答',
-    href: '/faq', // Example, this page doesn't exist yet
+    text: '账号购买/小铺子',
+    href: 'https://apks.pgid.club/', 
     icon: LifeBuoy,
   },
   {
-    text: '联系客服',
-    href: 'mailto:support@example.com',
+    text: '发送邮件联系客服',
+    href: 'mailto:apkscc-feedback@foxmail.com',
     icon: Mail,
   }
 ];
