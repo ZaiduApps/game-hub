@@ -112,22 +112,18 @@ export default async function PkgLayout({ children, params }: LayoutProps) {
   }
   
   return (
-    <html lang="zh-Hans" className="dark" suppressHydrationWarning>
-        <head />
-        <body className="font-body antialiased bg-background text-foreground" suppressHydrationWarning>
-            <Suspense>
+    <>
+        <Suspense>
             <main>{children}</main>
-            </Suspense>
-            <Toaster />
-            {baiduScript.src && (
-                <Script src={baiduScript.src} strategy="afterInteractive" />
-            )}
-            {baiduScript.innerHTML && (
-                <Script id="baidu-analytics-inline" strategy="afterInteractive">
-                    {baiduScript.innerHTML}
-                </Script>
-            )}
-        </body>
-    </html>
+        </Suspense>
+        {baiduScript.src && (
+            <Script src={baiduScript.src} strategy="afterInteractive" />
+        )}
+        {baiduScript.innerHTML && (
+            <Script id="baidu-analytics-inline" strategy="afterInteractive">
+                {baiduScript.innerHTML}
+            </Script>
+        )}
+    </>
   );
 }

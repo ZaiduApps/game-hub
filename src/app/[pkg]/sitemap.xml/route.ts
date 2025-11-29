@@ -2,7 +2,7 @@
 import { getSiteConfig } from '@/config/site';
 import { notFound } from 'next/navigation';
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.pubgmobile.com';
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://hub.apks.cc';
 
 function generateSitemapXml(urls: { url: string; lastModified?: string | Date }[]): string {
   const urlTags = urls
