@@ -4,6 +4,7 @@ import type {NextConfig} from 'next';
 const nextConfig: NextConfig = {
   /* config options here */
   distDir: 'dist',
+  devIndicators: false,
   typescript: {
     ignoreBuildErrors: true,
   },
