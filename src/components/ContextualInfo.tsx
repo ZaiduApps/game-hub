@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AlertCircle, Bot, Lightbulb, Loader2 } from 'lucide-react';
-import { getAIInsights } from '@/app/actions';
+import { getAIInsights } from '@/app/server-actions';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 
 interface ContextualInfoProps {

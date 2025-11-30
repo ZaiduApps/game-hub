@@ -17,8 +17,8 @@ export async function getAIInsights(input: ContextualInformationInput) {
 
 export async function submitFeedback(input: FeedbackInput) {
     try {
-        await submitFeedbackFlow(input);
-        return { success: true };
+        const result = await submitFeedbackFlow(input);
+        return { success: true, data: result };
     } catch (error) {
         console.error("Error submitting feedback:", error);
         return { success: false, error: "Failed to submit feedback. Please try again." };

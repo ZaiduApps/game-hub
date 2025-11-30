@@ -121,7 +121,7 @@ export default async function PkgLayout({ children, params }: LayoutProps) {
       <Suspense>
         <main>{children}</main>
       </Suspense>
-      {siteConfig && <FloatingHelpButton siteConfig={siteConfig} />}
+      {siteConfig && <FloatingHelpButton />}
       {siteConfig && <Footer siteConfig={siteConfig} pkg={pkgName} />}
       {baiduScriptSrc && (
           <Script src={baiduScriptSrc} strategy="afterInteractive" />

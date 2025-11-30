@@ -27,7 +27,7 @@ import {
 } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
 import { SiteConfig } from '@/config/site';
-import { submitFeedback } from '@/app/actions';
+import { submitFeedback } from '@/app/server-actions';
 import { Loader2 } from 'lucide-react';
 import { FeedbackInput, FeedbackInputSchema } from '@/lib/types';
 
@@ -70,7 +70,7 @@ export function FeedbackDialog({ siteConfig, open, onOpenChange, isTriggeredByFa
       if (result.success) {
         toast({
           title: '反馈已提交',
-          description: '感谢您的宝贵意见！',
+          description: result.data?.message || '感谢您的宝贵意见！',
         });
         setDialogOpen(false);
         form.reset();

@@ -14,20 +14,15 @@ interface PkgPageProps {
 }
 
 export default async function PkgPage({ params }: PkgPageProps) {
-    const pkgSegments = params.pkg || [];
+    const awaitedParams = await params;
+    const pkgSegments = awaitedParams.pkg || [];
     let pkgName: string;
     let siteName: string | undefined;
 
     if (pkgSegments.length >= 2) {
         siteName = decodeURIComponent(pkgSegments[0]);
         pkgName = pkgSegments[1];
-    } else if (pkgSegments.length === 1) {
-        // This case should now be handled by the middleware redirect, 
-        // but as a fallback, we'll try to load the config and render.
-        // The middleware will ensure the URL is corrected for the user.
-        pkgName = pkgSegments[0];
-    }
-    else {
+    } else {
         // This case is handled by middleware, but we redirect as a fallback.
         redirect('/');
     }

@@ -52,6 +52,9 @@ const nextConfig: NextConfig = {
       }
     ],
   },
+  experimental: {
+    allowedDevOrigins: ["*.apks.cc", "*.154.36.164.243"],
+  },
 };
 
 export default nextConfig;
