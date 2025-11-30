@@ -23,16 +23,15 @@ export default async function PkgPage({ params }: PkgPageProps) {
         siteName = decodeURIComponent(pkgSegments[0]);
         pkgName = pkgSegments[1];
     } else {
-        // This case is handled by middleware, but we redirect as a fallback.
-        redirect('/');
+        // If middleware didn't catch it, it's likely an invalid path.
+        notFound();
     }
     
     const siteConfig = await getSiteConfig(pkgName);
 
     if (!siteConfig) {
-        // If the config can't be fetched for a pkgName, redirect to the root.
-        // The root will then be handled by the middleware.
-        redirect('/');
+        // If the config can't be fetched for a valid-looking pkgName, it's a 404.
+        notFound();
     }
     
     const isArticlePage = pkgSegments.length > 2 && pkgSegments[2] === 'articles';
