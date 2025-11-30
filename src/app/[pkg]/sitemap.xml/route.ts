@@ -26,7 +26,7 @@ export async function GET(
 ) {
   const pkgName = params.pkg;
 
-  if (!pkgName) {
+  if (!pkgName || pkgName.endsWith('.xml') || pkgName.endsWith('.txt')) {
     notFound();
   }
 
