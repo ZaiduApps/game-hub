@@ -14,30 +14,29 @@ interface PkgPageProps {
 }
 
 export default async function PkgPage({ params }: PkgPageProps) {
-    const awaitedParams = await params;
-    const pkgSegments = awaitedParams.pkg || [];
+    const pkgSegments = params.pkg || [];
     let pkgName: string;
     let siteName: string | undefined;
 
-    if (pkgSegments.length === 1) {
-        pkgName = pkgSegments[0];
-        const siteConfig = await getSiteConfig(pkgName);
-        if (siteConfig) {
-            const encodedSiteName = encodeURIComponent(siteConfig.name);
-            redirect(`/${encodedSiteName}/${pkgName}`);
-        } else {
-            redirect('/');
-        }
-    } else if (pkgSegments.length >= 2) {
+    if (pkgSegments.length >= 2) {
         siteName = decodeURIComponent(pkgSegments[0]);
         pkgName = pkgSegments[1];
-    } else {
+    } else if (pkgSegments.length === 1) {
+        // This case should now be handled by the middleware redirect, 
+        // but as a fallback, we'll try to load the config and render.
+        // The middleware will ensure the URL is corrected for the user.
+        pkgName = pkgSegments[0];
+    }
+    else {
+        // This case is handled by middleware, but we redirect as a fallback.
         redirect('/');
     }
     
     const siteConfig = await getSiteConfig(pkgName);
 
     if (!siteConfig) {
+        // If the config can't be fetched for a pkgName, redirect to the root.
+        // The root will then be handled by the middleware.
         redirect('/');
     }
     
@@ -85,7 +84,6 @@ export default async function PkgPage({ params }: PkgPageProps) {
             </div>
             </article>
         );
-
     }
 
     return <HomePageContent siteConfig={siteConfig} pkg={pkgName} />;
