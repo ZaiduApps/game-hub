@@ -19,31 +19,42 @@ export default async function PkgPage({ params }: PkgPageProps) {
     let pkgName: string;
     let siteName: string | undefined;
 
-    if (pkgSegments.length >= 2) {
+    if (pkgSegments.length === 1) {
+        pkgName = pkgSegments[0];
+    } else if (pkgSegments.length >= 2) {
         siteName = decodeURIComponent(pkgSegments[0]);
         pkgName = pkgSegments[1];
     } else {
-        // If middleware didn't catch it, it's likely an invalid path.
-        notFound();
+        // If no pkg, redirect to default
+        const defaultConfig = await getSiteConfig('com.tencent.ig');
+        if (defaultConfig) {
+            return redirect(`/${encodeURIComponent(defaultConfig.name)}/com.tencent.ig`);
+        }
+        return notFound();
     }
     
     const siteConfig = await getSiteConfig(pkgName);
 
     if (!siteConfig) {
         // If the config can't be fetched for a valid-looking pkgName, it's a 404.
-        notFound();
+        return notFound();
+    }
+
+    // If we are on a short URL, redirect to the full SEO-friendly URL
+    if (pkgSegments.length === 1) {
+        return redirect(`/${encodeURIComponent(siteConfig.name)}/${pkgName}`);
     }
     
     const isArticlePage = pkgSegments.length > 2 && pkgSegments[2] === 'articles';
     if (isArticlePage) {
         const slug = pkgSegments[3];
         if (!slug) {
-            notFound();
+            return notFound();
         }
         const article = await getArticleBySlug(slug, pkgName);
 
         if (!article) {
-            notFound();
+            return notFound();
         }
 
         return (
