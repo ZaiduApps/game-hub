@@ -26,18 +26,16 @@ export async function middleware(request: NextRequest) {
   // If there's only one segment, it's a short URL that needs redirecting for SEO
   if (pkgSegments.length === 1) {
     const pkgName = pkgSegments[0];
+    const siteConfig = await getSiteConfig(pkgName);
 
-    try {
-        const siteConfig = await getSiteConfig(pkgName);
-        if (siteConfig && siteConfig.name) {
-          const encodedSiteName = encodeURIComponent(siteConfig.name);
-          const newPath = `/${encodedSiteName}/${pkgName}`;
-          // Use a permanent redirect for SEO benefits
-          return NextResponse.redirect(new URL(newPath, request.url), 301);
-        }
-    } catch (error) {
-        // If fetching config fails, let it pass through to the page to render a 404.
-        console.error(`Middleware failed to get site config for pkg: ${pkgName}`, error);
+    if (siteConfig && siteConfig.name) {
+      const encodedSiteName = encodeURIComponent(siteConfig.name);
+      const newPath = `/${encodedSiteName}/${pkgName}`;
+      
+      // If the new path is different, redirect.
+      if (pathname !== newPath) {
+        return NextResponse.redirect(new URL(newPath, request.url), 301);
+      }
     }
   }
 

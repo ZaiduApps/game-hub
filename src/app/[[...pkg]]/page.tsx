@@ -17,12 +17,11 @@ export default async function PkgPage({ params }: PkgPageProps) {
     const awaitedParams = await params;
     const pkgSegments = awaitedParams.pkg || [];
     let pkgName: string | undefined;
-    let siteName: string | undefined;
 
+    // This logic now robustly handles both short and long URLs without redirecting.
     if (pkgSegments.length === 1) {
         pkgName = pkgSegments[0];
     } else if (pkgSegments.length >= 2) {
-        siteName = pkgSegments[0];
         pkgName = pkgSegments[1];
     }
 
