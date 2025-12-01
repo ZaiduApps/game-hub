@@ -15,7 +15,7 @@ export async function middleware(request: NextRequest) {
   // Handle root redirect to default package
   if (pathname === '/') {
     const siteConfig = await getSiteConfig('com.tencent.ig');
-    if (siteConfig) {
+    if (siteConfig && siteConfig.name) {
       const encodedSiteName = encodeURIComponent(siteConfig.name);
       return NextResponse.redirect(new URL(`/${encodedSiteName}/com.tencent.ig`, request.url), 301);
     }

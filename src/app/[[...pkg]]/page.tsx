@@ -16,16 +16,15 @@ interface PkgPageProps {
 export default async function PkgPage({ params }: PkgPageProps) {
     const awaitedParams = await params;
     const pkgSegments = awaitedParams.pkg || [];
-    let pkgName: string;
-    let siteName: string | undefined;
+    let pkgName: string | undefined;
 
     if (pkgSegments.length === 1) {
         pkgName = pkgSegments[0];
     } else if (pkgSegments.length >= 2) {
-        siteName = decodeURIComponent(pkgSegments[0]);
         pkgName = pkgSegments[1];
-    } else {
-        // Fallback to notFound if no package is specified and middleware didn't redirect.
+    }
+
+    if (!pkgName) {
         return notFound();
     }
     
