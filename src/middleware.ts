@@ -31,7 +31,7 @@ export async function middleware(request: NextRequest) {
     try {
         const siteConfig = await getSiteConfig(pkgName);
         if (siteConfig && siteConfig.name) {
-          const encodedSiteName = encodeURIComponent(siteCode.name);
+          const encodedSiteName = encodeURIComponent(siteConfig.name);
           const newPath = `/${encodedSiteName}/${pkgName}`;
           // Use a permanent redirect for SEO benefits
           return NextResponse.redirect(new URL(newPath, request.url), 301);
