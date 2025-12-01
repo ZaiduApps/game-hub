@@ -7,7 +7,7 @@ export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const pkgSegments = pathname.split('/').filter(Boolean);
 
-  // Ignore Next.js specific paths, API routes, and static files.
+  // Ignore Next.js specific paths, API routes, and files with extensions
   if (pathname.startsWith('/_next') || pathname.startsWith('/api') || pkgSegments.length > 0 && pkgSegments[pkgSegments.length - 1].includes('.')) {
     return NextResponse.next();
   }
@@ -23,8 +23,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/com.tencent.ig', request.url), 301);
   }
 
-
-  // If there's only one segment, it's a short URL that needs redirecting
+  // If there's only one segment, it's a short URL that needs redirecting for SEO
   if (pkgSegments.length === 1) {
     const pkgName = pkgSegments[0];
 
@@ -37,7 +36,7 @@ export async function middleware(request: NextRequest) {
           return NextResponse.redirect(new URL(newPath, request.url), 301);
         }
     } catch (error) {
-        // If fetching config fails, we can't build the new URL, so let it 404 gracefully.
+        // If fetching config fails, let it pass through to the page to render a 404.
         console.error(`Middleware failed to get site config for pkg: ${pkgName}`, error);
     }
   }
