@@ -1,7 +1,7 @@
 
 import { getSiteConfig, getArticleBySlug } from '@/config/site';
 import { HomePageContent } from '@/components/HomePageContent';
-import { notFound, redirect } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { MarkdownContent } from '@/components/MarkdownContent';
 import { ContextualInfo } from '@/components/ContextualInfo';
@@ -25,24 +25,14 @@ export default async function PkgPage({ params }: PkgPageProps) {
         siteName = decodeURIComponent(pkgSegments[0]);
         pkgName = pkgSegments[1];
     } else {
-        // If no pkg, redirect to default
-        const defaultConfig = await getSiteConfig('com.tencent.ig');
-        if (defaultConfig) {
-            return redirect(`/${encodeURIComponent(defaultConfig.name)}/com.tencent.ig`);
-        }
+        // Fallback to notFound if no package is specified and middleware didn't redirect.
         return notFound();
     }
     
     const siteConfig = await getSiteConfig(pkgName);
 
     if (!siteConfig) {
-        // If the config can't be fetched for a valid-looking pkgName, it's a 404.
         return notFound();
-    }
-
-    // If we are on a short URL, redirect to the full SEO-friendly URL
-    if (pkgSegments.length === 1) {
-        return redirect(`/${encodeURIComponent(siteConfig.name)}/${pkgName}`);
     }
     
     const isArticlePage = pkgSegments.length > 2 && pkgSegments[2] === 'articles';
