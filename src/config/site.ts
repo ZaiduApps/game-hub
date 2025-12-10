@@ -100,7 +100,7 @@ export const getSiteConfig = async (pkg?: string): Promise<SiteConfig | null> =>
     }
 
     try {
-        const apiUrl = `https://api.us.apks.cc/game/site-config?pkg=${pkg}`;
+        const apiUrl = `https://api.hk.apks.cc/game/site-config?pkg=${pkg}`;
         const response = await fetch(apiUrl, { cache: 'no-store' });
 
         if (response.ok) {
