@@ -31,7 +31,7 @@ export function ApkDownloadDialog({ open, onOpenChange, siteConfig }: ApkDownloa
         <DialogHeader>
           <DialogTitle>{apk.dialog.title}</DialogTitle>
           <DialogDescription>
-            {apk.dialog.description}
+            {apk.dialog.description}如果支持网盘推荐保存到网盘后再下载，享受不限速免费下载
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
@@ -39,7 +39,7 @@ export function ApkDownloadDialog({ open, onOpenChange, siteConfig }: ApkDownloa
             <Button asChild size="lg">
               <Link href={apk.dialog.panUrl} target="_blank">
                 <DownloadCloud className="mr-2" />
-                网盘下载
+                网盘不限速免费下载
               </Link>
             </Button>
           )}
@@ -47,7 +47,7 @@ export function ApkDownloadDialog({ open, onOpenChange, siteConfig }: ApkDownloa
             <Button asChild size="lg" variant="secondary">
               <Link href={apk.dialog.officialUrl} target="_blank">
                 <Globe className="mr-2" />
-                官网下载
+                官网慢速下载
               </Link>
             </Button>
           )}
