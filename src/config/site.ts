@@ -89,6 +89,12 @@ const SiteConfigSchema = z.object({
     sections: z.array(SectionSchema),
 }).passthrough();
 
+const ApiResponseSchema = z.object({
+    code: z.number(),
+    message: z.string(),
+    data: SiteConfigSchema,
+});
+
 export type SiteConfig = z.infer<typeof SiteConfigSchema>;
 export type Article = z.infer<typeof ArticleSchema>;
 export type Section = z.infer<typeof SectionSchema>;
@@ -106,12 +112,12 @@ export const getSiteConfig = async (pkg?: string): Promise<SiteConfig | null> =>
         const response = await fetch(apiUrl, { cache: 'no-store' });
 
         if (response.ok) {
-            const data = await response.json();
-            const parsedData = SiteConfigSchema.safeParse(data);
-            if (parsedData.success) {
-                return parsedData.data;
+            const responseData = await response.json();
+            const parsedResponse = ApiResponseSchema.safeParse(responseData);
+            if (parsedResponse.success && parsedResponse.data.code === 0) {
+                return parsedResponse.data.data;
             } else {
-                console.error(`Failed to parse dynamic config for pkg: ${pkg}.`, parsedData.error.toString());
+                console.error(`Failed to parse dynamic config for pkg: ${pkg}.`, parsedResponse.error?.toString());
                 return null;
             }
         } else {
