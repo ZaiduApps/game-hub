@@ -28,9 +28,9 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
   }
 
   const sitePath = pkgSegments.length
-    ? `/${pkgSegments.map((segment) => encodeURIComponent(segment)).join('/')}`
+    ? `/${pkgSegments.join('/')}`
     : '';
-  const canonical = `${sitePath}/articles/${encodeURIComponent(awaitedParams.slug)}`;
+  const canonical = `${sitePath}/articles/${awaitedParams.slug}`;
 
   return {
     title: article.title,

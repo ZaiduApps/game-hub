@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: LayoutProps, parent: Resolvin
   const siteConfig = await getSiteConfig(pkgName);
 
   const canonicalPath = pkgSegments.length
-    ? `/${pkgSegments.map((segment) => encodeURIComponent(segment)).join('/')}`
+    ? `/${pkgSegments.join('/')}`
     : '/';
   
   if (!siteConfig) {
