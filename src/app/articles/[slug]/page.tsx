@@ -14,6 +14,7 @@ type Props = {
 export async function generateMetadata({ params }: Props, parent: ResolvingMetadata): Promise<Metadata> {
   const awaitedParams = await params;
   const pkgName = awaitedParams.pkg?.[1];
+  const pkgSegments = awaitedParams.pkg || [];
   const article = await getArticleBySlug(params.slug, pkgName);
   const siteConfig = await getSiteConfig(pkgName);
   
@@ -22,12 +23,20 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
   if (!article || !siteConfig) {
     return {
       title: `文章未找到 - ${siteConfig?.name || ''}`,
+      robots: { index: false, follow: false },
     };
   }
+
+  const sitePath = pkgSegments.length
+    ? `/${pkgSegments.map((segment) => encodeURIComponent(segment)).join('/')}`
+    : '';
+  const canonical = `${sitePath}/articles/${encodeURIComponent(awaitedParams.slug)}`;
 
   return {
     title: article.title,
     description: ensureSeoDescription(article.summary, article.title),
+    alternates: { canonical },
+    robots: { index: true, follow: true },
     openGraph: {
       title: article.title,
       description: ensureSeoDescription(article.summary, article.title),

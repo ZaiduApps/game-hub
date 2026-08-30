@@ -26,23 +26,30 @@ export async function generateMetadata({ params }: LayoutProps, parent: Resolvin
   }
   
   const siteConfig = await getSiteConfig(pkgName);
+
+  const canonicalPath = pkgSegments.length
+    ? `/${pkgSegments.map((segment) => encodeURIComponent(segment)).join('/')}`
+    : '/';
   
   if (!siteConfig) {
     return {
       title: 'Site Not Found',
       description: 'The requested site configuration could not be loaded.',
+      robots: { index: false, follow: false },
     }
   }
 
   const previousImages = (await parent).openGraph?.images || [];
 
   const metadata: Metadata = {
-    metadataBase: new URL('https://example.com'), 
+    metadataBase: new URL('https://hub.apks.cc'),
     title: {
       default: `${siteConfig.name} - ${siteConfig.seo.title}`,
       template: `%s - ${siteConfig.name}`,
     },
     description: ensureSeoDescription(siteConfig.seo.description, siteConfig.name),
+    alternates: { canonical: canonicalPath },
+    robots: { index: true, follow: true },
     keywords: siteConfig.seo.keywords,
     openGraph: {
       title: `${siteConfig.name} - ${siteConfig.seo.title}`,
