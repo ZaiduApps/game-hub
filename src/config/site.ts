@@ -100,6 +100,14 @@ export type Article = z.infer<typeof ArticleSchema>;
 export type Section = z.infer<typeof SectionSchema>;
 export type Update = Article;
 
+export function ensureSeoDescription(input: string | null | undefined, context: string): string {
+    const base = String(input || '').trim();
+    const suffix = `持续查看${context}的版本信息、安装说明、资源入口、截图内容与玩家反馈，使用前请核对适配设备和更新时间。`;
+    const value = base || suffix;
+    if (value.length >= 120) return value.slice(0, 160);
+    return `${value}${suffix}`.slice(0, 160);
+}
+
 export const getSiteConfig = async (pkg?: string): Promise<SiteConfig | null> => {
     if (!pkg) {
         return null;

@@ -1,5 +1,5 @@
 
-import { getArticleBySlug, getSiteConfig } from '@/config/site';
+import { ensureSeoDescription, getArticleBySlug, getSiteConfig } from '@/config/site';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { MarkdownContent } from '@/components/MarkdownContent';
@@ -27,10 +27,10 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
 
   return {
     title: article.title,
-    description: article.summary,
+    description: ensureSeoDescription(article.summary, article.title),
     openGraph: {
       title: article.title,
-      description: article.summary,
+      description: ensureSeoDescription(article.summary, article.title),
       images: article.imageUrl ? [article.imageUrl, ...previousImages] : [],
     },
   };

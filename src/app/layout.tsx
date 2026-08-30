@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { getSiteConfig } from '@/config/site';
+import { ensureSeoDescription, getSiteConfig } from '@/config/site';
 import { Toaster } from "@/components/ui/toaster"
 import './globals.css';
 
@@ -21,17 +21,17 @@ export async function generateMetadata(): Promise<Metadata> {
       default: `${siteConfig.name} - ${siteConfig.seo.title}`,
       template: `%s - ${siteConfig.name}`,
     },
-    description: siteConfig.seo.description,
+    description: ensureSeoDescription(siteConfig.seo.description, siteConfig.name),
     keywords: siteConfig.seo.keywords,
     openGraph: {
       title: `${siteConfig.name} - ${siteConfig.seo.title}`,
-      description: siteConfig.seo.description,
+      description: ensureSeoDescription(siteConfig.seo.description, siteConfig.name),
       images: siteConfig.seo.ogImage ? [siteConfig.seo.ogImage] : [],
     },
     twitter: {
       card: 'summary_large_image',
       title: `${siteConfig.name} - ${siteConfig.seo.title}`,
-      description: siteConfig.seo.description,
+      description: ensureSeoDescription(siteConfig.seo.description, siteConfig.name),
       images: siteConfig.seo.ogImage ? [siteConfig.seo.ogImage] : [],
     },
     verification: {},

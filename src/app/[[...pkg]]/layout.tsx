@@ -1,6 +1,6 @@
 
 import type { Metadata, ResolvingMetadata } from 'next';
-import { getSiteConfig } from '@/config/site';
+import { ensureSeoDescription, getSiteConfig } from '@/config/site';
 import Script from 'next/script';
 import { Suspense } from 'react';
 import { FloatingHelpButton } from '@/components/FloatingHelpButton';
@@ -42,17 +42,17 @@ export async function generateMetadata({ params }: LayoutProps, parent: Resolvin
       default: `${siteConfig.name} - ${siteConfig.seo.title}`,
       template: `%s - ${siteConfig.name}`,
     },
-    description: siteConfig.seo.description,
+    description: ensureSeoDescription(siteConfig.seo.description, siteConfig.name),
     keywords: siteConfig.seo.keywords,
     openGraph: {
       title: `${siteConfig.name} - ${siteConfig.seo.title}`,
-      description: siteConfig.seo.description,
+      description: ensureSeoDescription(siteConfig.seo.description, siteConfig.name),
       images: siteConfig.seo.ogImage ? [siteConfig.seo.ogImage, ...previousImages] : previousImages,
     },
     twitter: {
       card: 'summary_large_image',
       title: `${siteConfig.name} - ${siteConfig.name}`,
-      description: siteConfig.seo.description,
+      description: ensureSeoDescription(siteConfig.seo.description, siteConfig.name),
       images: siteConfig.seo.ogImage ? [siteConfig.seo.ogImage] : [],
     },
     verification: {},
